@@ -1,0 +1,258 @@
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+    <title>GridGuard AI - Strategic Overview</title>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/5.0.4/reset.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/5.0.4/reveal.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/5.0.4/theme/black.min.css">
+
+    <!-- GridGuard Aesthetic Overrides -->
+    <style>
+      @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=JetBrains+Mono:wght@400;700&display=swap');
+
+      :root {
+        --bg-primary: #0D1117;
+        --text-primary: #F0F6FC;
+        --text-secondary: #8B949E;
+        --accent: #58A6FF;
+        --success: #238636;
+        --danger: #DA3633;
+        --warning: #D29922;
+      }
+
+      body { background-color: var(--bg-primary); }
+      
+      .reveal {
+        font-family: 'Inter', sans-serif;
+        color: var(--text-primary);
+      }
+
+      .reveal h1, .reveal h2, .reveal h3, .reveal h4 {
+        font-family: 'JetBrains Mono', monospace;
+        text-transform: uppercase;
+        letter-spacing: -1px;
+      }
+
+      .reveal h1 { color: var(--accent); text-shadow: 0 0 20px rgba(88, 166, 255, 0.4); }
+      .reveal h2 { color: var(--text-primary); }
+      .reveal h3 { color: var(--text-secondary); font-size: 1.5em; }
+
+      /* Cyberpunk Grid Background */
+      .reveal-viewport {
+        background-color: #05090e;
+        background-image: 
+          linear-gradient(rgba(88, 166, 255, 0.03) 1px, transparent 1px),
+          linear-gradient(90deg, rgba(88, 166, 255, 0.03) 1px, transparent 1px);
+        background-size: 40px 40px;
+      }
+
+      /* Custom Cards */
+      .card {
+        background: #161B22;
+        border: 1px solid #30363D;
+        border-radius: 8px;
+        padding: 20px;
+        text-align: left;
+        margin: 10px;
+      }
+      
+      .tag {
+        display: inline-block;
+        font-family: 'JetBrains Mono';
+        font-size: 0.6em;
+        padding: 4px 8px;
+        border-radius: 4px;
+        border: 1px solid currentColor;
+        margin-right: 10px;
+      }
+      .tag.blue { color: var(--accent); background: rgba(88, 166, 255, 0.1); }
+      .tag.green { color: var(--success); background: rgba(35, 134, 54, 0.1); }
+      .tag.red { color: var(--danger); background: rgba(218, 54, 51, 0.1); }
+
+      ul { font-size: 0.8em; line-height: 1.6; }
+      li { margin-bottom: 15px; }
+      strong { color: var(--accent); }
+    </style>
+  </head>
+  <body>
+    <div class="reveal">
+      <div class="slides">
+
+        <!-- SLIDE 1: TITLE -->
+        <section>
+          <div style="border: 2px solid var(--accent); padding: 40px; display: inline-block; border-radius: 4px;">
+            <h1 style="margin: 0;">GridGuard AI</h1>
+            <p style="font-family: 'JetBrains Mono'; font-size: 0.6em; color: var(--text-secondary); margin-top: 20px;">
+              v2.0 // HIGH-FIDELITY PROTOTYPE
+            </p>
+          </div>
+          <h3 style="margin-top: 40px;">Cognitive Grid Defense System</h3>
+          <p style="font-size: 0.7em; color: var(--text-secondary);">
+            Physics-Informed AI • Real-Time Dispatch • NERC CIP Compliance
+          </p>
+        </section>
+
+        <!-- SLIDE 2: THE PROBLEM -->
+        <section>
+          <h2>The Problem</h2>
+          <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 20px;">
+            <div class="card fragment fade-up">
+              <h4 style="color: var(--danger)">Cognitive Overload</h4>
+              <p style="font-size: 0.6em;">During crises (e.g., Winter Storm Uri), operators face 1,000+ alarms per minute. Human processing speed cannot keep up.</p>
+            </div>
+            <div class="card fragment fade-up">
+              <h4 style="color: var(--warning)">Legacy Tech</h4>
+              <p style="font-size: 0.6em;">Current SCADA/EMS systems are rigid, built in the 1990s, and struggle with the volatility of Wind & Solar.</p>
+            </div>
+            <div class="card fragment fade-up">
+              <h4 style="color: var(--text-secondary)">Brain Drain</h4>
+              <p style="font-size: 0.6em;">50% of the utility workforce is retiring. Institutional knowledge is leaving the control room.</p>
+            </div>
+          </div>
+        </section>
+
+        <!-- SLIDE 3: THE SOLUTION -->
+        <section>
+          <h2>The Solution</h2>
+          <p style="font-size: 0.8em;">A <strong style="color: var(--accent)">Cognitive Operating System</strong> for Critical Infrastructure.</p>
+          <div style="margin-top: 40px; font-size: 0.7em; text-align: left; width: 80%; margin-left: auto; margin-right: auto;">
+            <ul>
+              <li class="fragment"><strong>Decision Support, Not Replacement:</strong> Augments the human operator with "Iron Man" capabilities.</li>
+              <li class="fragment"><strong>Physics-Informed:</strong> AI that understands Frequency (60Hz), Voltage, and Thermodynamics.</li>
+              <li class="fragment"><strong>Unified Pane of Glass:</strong> Merges <em>Grid Physics</em> (Reliability) with <em>Market Economics</em> (LMP Prices).</li>
+            </ul>
+          </div>
+        </section>
+
+        <!-- SLIDE 4: KEY FEATURES -->
+        <section>
+          <h2>Core Capabilities</h2>
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; font-size: 0.6em;">
+            <div class="card">
+              <h4>🤖 Agent Swarm</h4>
+              <p>Autonomous AI agents (Meteorologist, Trader, Engineer) debate strategies in real-time before advising the human.</p>
+            </div>
+            <div class="card">
+              <h4>🎙️ Voice Command</h4>
+              <p>Push-to-Talk interface for hands-free control room operation ("What is the Load Forecast?").</p>
+            </div>
+            <div class="card">
+              <h4>🌩️ Scenario Sim</h4>
+              <p>Replay historical disasters (e.g., Uri 2021) to test grid resilience against "What-If" scenarios.</p>
+            </div>
+            <div class="card">
+              <h4>👁️ Vision Analysis</h4>
+              <p>Upload thermal images of transformers; AI detects overheating anomalies instantly.</p>
+            </div>
+          </div>
+        </section>
+
+        <!-- SLIDE 5: GOVERNANCE (CRITICAL) -->
+        <section>
+          <h2 style="color: var(--success)">Trust & Governance</h2>
+          <p style="font-size: 0.6em; margin-bottom: 40px;">Compliant with <strong>NIST AI RMF 1.0</strong> & <strong>NERC CIP</strong>.</p>
+          
+          <div style="text-align: left; width: 90%; margin: auto;">
+            <div class="fragment fade-in">
+              <span class="tag green">Human-in-the-Loop (HITL)</span>
+              <span style="font-size: 0.6em;">AI cannot actuate breakers. It can only <em>propose</em> actions for human approval.</span>
+            </div>
+            <div class="fragment fade-in" style="margin-top: 20px;">
+              <span class="tag red">Safety Interlocks</span>
+              <span style="font-size: 0.6em;">Deterministic code layer blocks dangerous AI commands (e.g., Shed > 2000MW).</span>
+            </div>
+            <div class="fragment fade-in" style="margin-top: 20px;">
+              <span class="tag blue">Audit Logging</span>
+              <span style="font-size: 0.6em;">Every prompt and action is hashed and stored in an immutable ledger for federal audit.</span>
+            </div>
+          </div>
+        </section>
+
+        <!-- SLIDE 6: TECH STACK -->
+        <section>
+          <h2>Under the Hood</h2>
+          <div style="display: flex; justify-content: center; gap: 40px; margin-top: 40px;">
+            <div style="text-align: center;">
+              <h1 style="color: #61DAFB; font-size: 2em; margin: 0;">⚛️</h1>
+              <p style="font-size: 0.5em;">React 18 + Vite</p>
+            </div>
+            <div style="text-align: center;">
+              <h1 style="color: #4285F4; font-size: 2em; margin: 0;">🧠</h1>
+              <p style="font-size: 0.5em;">Gemini 3 Pro</p>
+            </div>
+            <div style="text-align: center;">
+              <h1 style="color: #38BDF8; font-size: 2em; margin: 0;">🎨</h1>
+              <p style="font-size: 0.5em;">Tailwind CSS</p>
+            </div>
+            <div style="text-align: center;">
+              <h1 style="color: #38BDF8; font-size: 2em; margin: 0;">⚡</h1>
+              <p style="font-size: 0.5em;">GridStatus API</p>
+            </div>
+          </div>
+          <p style="margin-top: 40px; font-size: 0.6em; color: var(--text-secondary);">
+            Architecture: Client-Side "Smart Shell" (Prototype) → Python/FastAPI (Production)
+          </p>
+        </section>
+
+        <!-- SLIDE 7: LIVE DEMO -->
+        <section data-background-color="#05090e">
+          <h1 style="font-size: 4em;">LIVE DEMO</h1>
+          <p class="fragment">1. Secure Authentication</p>
+          <p class="fragment">2. Real-Time Telemetry</p>
+          <p class="fragment">3. Agent Orchestration</p>
+          <p class="fragment">4. Historical Forensics</p>
+        </section>
+
+        <!-- SLIDE 8: ROADMAP -->
+        <section>
+          <h2>Roadmap</h2>
+          <div style="position: relative; border-left: 2px solid var(--text-secondary); margin-left: 50px; padding-left: 30px; text-align: left;">
+            <div class="fragment fade-right" style="margin-bottom: 30px;">
+              <span class="tag blue">Phase 1: Prototype (Now)</span>
+              <p style="font-size: 0.5em; margin: 5px 0;">UI/UX, Simulation, Basic RAG, Voice Interface.</p>
+            </div>
+            <div class="fragment fade-right" style="margin-bottom: 30px;">
+              <span class="tag warning">Phase 2: Commercial Core</span>
+              <p style="font-size: 0.5em; margin: 5px 0;">Backend Migration, SSO/MFA, Vector DB (Pinecone) for deep knowledge.</p>
+            </div>
+            <div class="fragment fade-right">
+              <span class="tag green">Phase 3: Enterprise Scale</span>
+              <p style="font-size: 0.5em; margin: 5px 0;">DNP3 Integration, Air-Gapped Local LLM, FedRAMP High Authorization.</p>
+            </div>
+          </div>
+        </section>
+
+        <!-- SLIDE 9: CONCLUSION -->
+        <section>
+          <h2>The Vision</h2>
+          <blockquote style="font-size: 0.8em; border-left: 4px solid var(--accent); padding-left: 20px; text-align: left; font-style: italic;">
+            "We are not just building software. We are building the nervous system for the sustainable energy transition."
+          </blockquote>
+          <div style="margin-top: 60px;">
+            <p><strong>GridGuard AI</strong></p>
+            <p style="font-size: 0.6em; color: var(--text-secondary);">Secure. Intelligent. Resilient.</p>
+          </div>
+        </section>
+
+      </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/5.0.4/reveal.min.js"></script>
+    <script>
+      Reveal.initialize({
+        hash: true,
+        transition: 'slide', // none/fade/slide/convex/concave/zoom
+        backgroundTransition: 'fade',
+        controls: true,
+        progress: true,
+        center: true,
+      });
+    </script>
+  </body>
+</html>
+    

@@ -1,0 +1,7 @@
+{
+  "name": "GridGuard AI",
+  "description": "Enhanced Grid Management System Shell. Production-ready UI designed for ERCOT data integration with ISO 11064 control room standards.",
+  "requestFramePermissions": [
+    "microphone"
+  ]
+}
