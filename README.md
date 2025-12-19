@@ -103,6 +103,22 @@
 
 ---
 
+### Research & Data Intelligence
+*Discover standards, import data, and train AI models*
+
+![Research](./docs/screenshots/research.png)
+<!-- Screenshot: Research page showing knowledge sources and papers -->
+
+**Key Features:**
+- Knowledge source catalog (NERC, ERCOT, NIST, DOE, IEEE)
+- Research paper discovery and import
+- Standards and protocols library
+- Vector store integration for RAG
+- Data import and fine-tuning workflows
+- Document upload and processing
+
+---
+
 ## 🎯 What Is This?
 
 GridGuard AI is an **enterprise-grade command center** for electric grid operators. It combines:
