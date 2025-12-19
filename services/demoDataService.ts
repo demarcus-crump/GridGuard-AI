@@ -209,23 +209,51 @@ export const demoDataService = {
     },
 
     /**
-     * Get simulated news headlines
-     */
-    getMarketNews: async (): Promise<Array<{ title: string; source: string; url: string }>> => {
+ * Get simulated news headlines
+ */
+    getMarketNews: async (): Promise<Array<{ title: string; source: { name: string }; url: string; description: string; publishedAt: string }>> => {
+        const now = new Date();
         return [
             {
                 title: 'ERCOT projects record summer demand as Texas grows',
-                source: 'Houston Chronicle',
+                source: { name: 'Houston Chronicle' },
+                description: 'Texas grid operator ERCOT forecasts peak summer demand could reach 85,000 MW this year, driven by population growth and extreme heat. New generation capacity is being added to meet the surge.',
+                publishedAt: new Date(now.getTime() - 2 * 60 * 60 * 1000).toISOString(), // 2 hours ago
                 url: '#'
             },
             {
-                title: 'Wind generation reaches 30GW milestone',
-                source: 'Reuters',
+                title: 'Wind generation reaches 30GW milestone in ERCOT',
+                source: { name: 'Reuters' },
+                description: 'Texas wind farms generated over 30 gigawatts of power for the first time, setting a new record. Wind now accounts for nearly 40% of ERCOT\'s total generation capacity.',
+                publishedAt: new Date(now.getTime() - 5 * 60 * 60 * 1000).toISOString(), // 5 hours ago
                 url: '#'
             },
             {
-                title: 'New solar farm approved for West Texas',
-                source: 'Austin Business Journal',
+                title: 'New 500MW solar farm approved for West Texas',
+                source: { name: 'Austin Business Journal' },
+                description: 'State regulators approved construction of a massive solar installation near Midland. The project will add significant renewable capacity and create hundreds of jobs during construction.',
+                publishedAt: new Date(now.getTime() - 8 * 60 * 60 * 1000).toISOString(), // 8 hours ago
+                url: '#'
+            },
+            {
+                title: 'Battery storage projects surge across Texas grid',
+                source: { name: 'Energy News Network' },
+                description: 'Over 2,000 MW of battery energy storage systems are now operational in ERCOT, helping to stabilize the grid during peak demand and renewable energy fluctuations.',
+                publishedAt: new Date(now.getTime() - 12 * 60 * 60 * 1000).toISOString(), // 12 hours ago
+                url: '#'
+            },
+            {
+                title: 'Natural gas prices drop amid mild winter weather',
+                source: { name: 'Bloomberg Energy' },
+                description: 'Warmer-than-expected temperatures across Texas have reduced heating demand, causing natural gas prices at Houston Ship Channel to fall 15% this week.',
+                publishedAt: new Date(now.getTime() - 18 * 60 * 60 * 1000).toISOString(), // 18 hours ago
+                url: '#'
+            },
+            {
+                title: 'ERCOT implements new demand response programs',
+                source: { name: 'Utility Dive' },
+                description: 'The grid operator launched enhanced demand response initiatives, allowing commercial customers to reduce load during peak hours in exchange for financial incentives.',
+                publishedAt: new Date(now.getTime() - 24 * 60 * 60 * 1000).toISOString(), // 1 day ago
                 url: '#'
             }
         ];

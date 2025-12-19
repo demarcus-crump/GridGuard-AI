@@ -30,7 +30,7 @@ export const Insights: React.FC = () => {
             id: art.url || `news-${i}`,
             title: art.title,
             summary: art.description || "No description available.",
-            author: art.source.name,
+            author: art.source?.name || art.author || 'GridGuard AI',
             date: new Date(art.publishedAt).toLocaleDateString(),
             url: art.url,
             tags: ['Market', 'ERCOT'],
