@@ -45,17 +45,18 @@
 
 ---
 
-### AI Insights - Intelligent Analysis
-*Multi-agent AI system providing actionable recommendations*
+### AI Insights - Market Intelligence
+*Real-time energy market news and analysis*
 
 ![Insights](./docs/screenshots/insights.png)
-<!-- Screenshot: Insights page with AI-generated recommendations -->
+<!-- Screenshot: Insights page with market news feed -->
 
 **Key Features:**
-- Gemini Pro-powered analysis
-- Multi-agent orchestration with Chain-of-Thought reasoning
-- Human-in-the-Loop approval workflow
-- Physics-based safety guardrails
+- Real-time energy market news from NewsAPI
+- Texas grid and ERCOT-focused articles
+- News from major energy publications (Reuters, Bloomberg, etc.)
+- Article summaries and source attribution
+- Direct links to full articles
 
 ---
 
