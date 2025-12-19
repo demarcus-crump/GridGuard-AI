@@ -3,336 +3,283 @@
 ![Version](https://img.shields.io/badge/version-3.0.0-blue)
 ![License](https://img.shields.io/badge/license-MIT-green)
 ![Status](https://img.shields.io/badge/status-Enterprise%20Prototype-orange)
-![Tech](https://img.shields.io/badge/tech-React%20%7C%20TypeScript%20%7C%20Gemini%20Pro%20%7C%20Cesium-purple)
-![Compliance](https://img.shields.io/badge/compliance-NIST%20AI%20RMF%201.0-brightgreen)
+![Compliance](https://img.shields.io/badge/NIST%20AI%20RMF-1.0%20Aligned-brightgreen)
 
 > **Cognitive Grid Defense & Management Platform**  
-> A physics-informed, AI-driven Decision Support System (DSS) for critical infrastructure operators. Built with NIST AI RMF 1.0 compliance and NERC CIP governance.
+> AI-powered decision support for critical energy infrastructure operators, designed for government, utility, and enterprise deployment.
 
 ---
 
-## 📸 Feature Showcase
+## Executive Summary
 
-### Grid Recon - 3D Digital Twin
-*Commercial-ready 3D visualization of the Texas power grid with real-time satellite imagery*
+GridGuard AI is an **enterprise-grade command center** for electric grid operators and critical infrastructure stakeholders. The platform combines real-time situational awareness, AI-powered analytics, and comprehensive governance frameworks to support grid reliability, cybersecurity preparedness, and regulatory compliance.
+
+**The Challenge:** Modern power grids face increasing complexity from renewable integration, cyber threats, and extreme weather events. Operators need unified visibility across assets, predictive intelligence, and auditable AI decision support.
+
+**Our Solution:** A physics-informed AI platform that provides:
+- Real-time grid visualization and monitoring
+- Multi-agent AI orchestration with human-in-the-loop controls
+- NIST AI RMF 1.0 compliance framework out-of-the-box
+- Cybersecurity training and incident response simulation
+
+---
+
+## Target Audiences
+
+| Sector | Primary Use Cases |
+|--------|-------------------|
+| **Government (DOE, DHS, CISA)** | Grid security assessment, AI governance compliance, critical infrastructure mapping |
+| **Electric Utilities** | Real-time operations, load forecasting, N-1 contingency analysis |
+| **Data Center Developers** | Site selection near grid capacity, power availability analysis |
+| **Oil & Gas Companies** | Pipeline proximity to transmission corridors, substation accessibility |
+| **Defense Contractors** | Critical infrastructure visualization, cybersecurity scenario training |
+| **Energy Traders** | Market intelligence, nodal price monitoring, demand forecasting |
+
+---
+
+## Platform Capabilities
+
+### Current Status (v3.0.0)
+
+| Capability | Status | Description |
+|------------|--------|-------------|
+| **3D Digital Twin** | Production | CesiumJS globe with satellite imagery, asset visualization, power flow animation |
+| **Real-Time Dashboard** | Production | Grid metrics, regional thermal mapping, predictive alerts (demo data in prototype) |
+| **AI Governance** | Production | NIST AI RMF framework, bias testing, model monitoring, cryptographic audit trail |
+| **Research Library** | Production | Knowledge sources (NERC, ERCOT, NIST, DOE, IEEE), document management |
+| **Cyber Simulation** | Demo | SCADA attack scenarios, DDoS training, ransomware response drills |
+| **Agent Orchestrator** | Demo | Multi-agent visualization framework (orchestration architecture ready) |
+| **Market Intelligence** | Demo | News aggregation from energy publications |
+
+### Commercial-Ready Vision
+
+With enterprise data integration, GridGuard AI enables:
+
+| Use Case | Required Integration | Value Delivered |
+|----------|----------------------|-----------------|
+| **Optimal Site Selection** | GIS data, substation capacity feeds | Identify ideal locations for data centers, O&G facilities near grid capacity |
+| **Predictive Maintenance** | SCADA historians, sensor feeds | AI-driven failure prediction for substation equipment |
+| **Real-Time Trading** | ERCOT API, nodal pricing feeds | Live LMP monitoring and price forecasting |
+| **Active Cyber Defense** | SIEM integration, network feeds | Automated threat detection and response |
+| **Emissions Optimization** | Carbon intensity APIs | Dispatch optimization for sustainability targets |
+
+---
+
+## Feature Showcase
+
+### Grid Recon — 3D Digital Twin
 
 ![Grid Recon](./docs/screenshots/grid-recon.png)
-<!-- Screenshot: 3D globe showing Texas with satellite imagery, power corridors, and asset markers -->
 
-**Key Features:**
-- CesiumJS-powered 3D globe with Bing Maps satellite imagery
-- Real-time power flow visualization with animated corridors
-- 3D asset representation (wind turbines, solar farms, nuclear plants)
-- Interactive camera controls (zoom, pan, rotate, fly-to locations)
-- Layer toggles (Commercial, Military, Agricultural)
-- McKinsey-style asset analysis panel
-- Automatic Esri fallback for reliability
+**Production-Ready Visualization:**
+- CesiumJS-powered globe with Bing Maps satellite imagery
+- Real-time power flow corridors with animated visualization
+- 3D asset markers (wind turbines, solar farms, nuclear plants, substations)
+- Interactive camera controls with preset location navigation
+- Layer management (Commercial, Military, Agricultural zones)
+- Automatic Esri fallback for guaranteed reliability
+- Error boundary crash protection
 
 ---
 
-### Dashboard - Real-Time Grid Metrics
-*Live telemetry and predictive analytics at a glance*
+### Dashboard — Operations Center
 
 ![Dashboard](./docs/screenshots/dashboard.png)
-<!-- Screenshot: Main dashboard with frequency, load, fuel mix charts -->
 
-**Key Features:**
-- Live grid frequency monitoring
-- Current load and generation metrics
-- Fuel mix breakdown (Wind, Solar, Gas, Nuclear, Coal)
-- Predictive alerts and N-1 contingency analysis
-- Regional status heatmap
+**Real-Time Situational Awareness:**
+- Grid frequency, load, and generation metrics
+- Fuel mix breakdown (Wind, Solar, Gas, Nuclear, Coal, Hydro)
+- Regional thermal mapping with NWS weather integration
+- SCED dispatch optimization recommendations
+- Congestion monitoring with corridor spread analysis
+- Predictive alerts with risk scoring
 
----
-
-### AI Insights - Market Intelligence
-*Real-time energy market news and analysis*
-
-![Insights](./docs/screenshots/insights.png)
-<!-- Screenshot: Insights page with market news feed -->
-
-**Key Features:**
-- Real-time energy market news from NewsAPI
-- Texas grid and ERCOT-focused articles
-- News from major energy publications (Reuters, Bloomberg, etc.)
-- Article summaries and source attribution
-- Direct links to full articles
-
----
-
-### Agent Orchestrator - Multi-Agent System
-*Visualize AI agent collaboration and decision-making*
-
-![Agents](./docs/screenshots/agents.png)
-<!-- Screenshot: Agent orchestrator showing agent nodes and connections -->
-
-**Key Features:**
-- Real-time agent activity monitoring
-- Chain-of-Thought visualization
-- Agent performance metrics
-- Task delegation and coordination
-
----
-
-### AI Governance - NIST AI RMF Compliance
-*Comprehensive AI safety, fairness, and monitoring*
-
-![Governance](./docs/screenshots/governance.png)
-<!-- Screenshot: Governance dashboard with bias metrics and model monitoring -->
-
-**Key Features:**
-- Bias testing and fairness metrics
-- Model drift detection
-- Hallucination checking
-- Cryptographic audit trail (SHA-256)
-- Kill switches and safe mode
-
----
-
-### Cyber Simulation - Attack Training
-*Realistic cybersecurity scenarios for grid operators*
-
-![Cyber Sim](./docs/screenshots/cyber-sim.png)
-<!-- Screenshot: Cyber simulation interface showing attack scenario -->
-
-**Key Features:**
-- SCADA attack simulations
-- DDoS scenario training
-- Ransomware response drills
-- Incident response playbooks
+*Note: Metrics display synthetic data in demo mode. Production deployment requires ERCOT/GridStatus.io API integration.*
 
 ---
 
 ### Research & Data Intelligence
-*Discover standards, import data, and train AI models*
 
 ![Research](./docs/screenshots/research.png)
-<!-- Screenshot: Research page showing knowledge sources and papers -->
 
-**Key Features:**
-- Knowledge source catalog (NERC, ERCOT, NIST, DOE, IEEE)
+**Knowledge Management:**
+- Curated sources (NERC, ERCOT, NIST, DOE, IEEE standards)
 - Research paper discovery and import
-- Standards and protocols library
-- Vector store integration for RAG
-- Data import and fine-tuning workflows
+- Vector store integration for RAG-powered queries
+- Data import workflows for model fine-tuning
 - Document upload and processing
 
 ---
 
-## 🎯 What Is This?
+### AI Governance — NIST AI RMF Alignment
 
-GridGuard AI is an **enterprise-grade command center** for electric grid operators. It combines:
+![Governance](./docs/screenshots/governance.png)
 
-- 🧠 **AI-Powered Insights** - Multi-agent orchestration with Gemini Pro
-- 🌍 **3D Digital Twin** - CesiumJS-powered visualization with real-time data
-- 🔒 **AI Governance** - Full NIST AI RMF 1.0 compliance
-- 🛡️ **Cybersecurity Training** - Attack simulation scenarios
-- 📊 **Predictive Analytics** - N-1 contingency analysis
-
----
-
-## ✨ Core Features
-
-### Real-Time Monitoring
-- Live grid frequency, load, and generation metrics
-- Fuel mix breakdown (Wind, Solar, Gas, Nuclear, Coal)
-- Regional status with weather integration
-- Predictive alerts and anomaly detection
-
-### 3D Grid Recon (Commercial-Ready)
-- CesiumJS digital twin with satellite imagery
-- 3D asset visualization (wind turbines, solar farms, nuclear plants, data centers)
-- Animated power flow corridors
-- Interactive camera controls and layer toggles
-- McKinsey-style asset analysis
-- Error boundary crash protection
-- Automatic Esri fallback for reliability
-
-### AI Intelligence
-- Multi-agent orchestration with Gemini Pro
-- Chain-of-Thought reasoning visualization
-- Human-in-the-Loop approval workflow
-- Physics-based safety guardrails
-- Voice and vision capabilities
-
-### AI Governance (NIST AI RMF 1.0)
+**Enterprise AI Safety:**
 - Bias testing and fairness metrics
-- Model drift detection
-- Hallucination checking
-- Cryptographic audit trail (SHA-256)
-- Kill switches and safe mode
+- Model drift detection and alerting
+- Hallucination checks for AI outputs
+- Cryptographic audit trail (SHA-256 hashed logs)
+- Kill switches and safe mode controls
 
-### Cybersecurity Training
-- SCADA attack simulations
-- DDoS scenario training
-- Ransomware response drills
-- Incident response playbooks
-
-### Advanced Analytics
-- N-1 contingency analysis
-- Predictive outage modeling
-- Historical playback and incident recording
-- What-if scenario simulations
-- NERC CIP compliance reporting
+| NIST AI RMF Function | Implementation Status |
+|----------------------|----------------------|
+| GOVERN | 90% Complete |
+| MAP | 85% Complete |
+| MEASURE | 95% Complete |
+| MANAGE | 95% Complete |
 
 ---
 
-## 🚀 Getting Started
+### Cyber Simulation — Training Environment
+
+![Cyber Sim](./docs/screenshots/cyber-sim.png)
+
+**Operator Preparedness:**
+- SCADA attack scenario simulations
+- DDoS response training
+- Ransomware incident drills
+- Incident response playbook exercises
+
+---
+
+### Agent Orchestrator — AI Visualization
+
+![Agents](./docs/screenshots/agents.png)
+
+**Multi-Agent Framework:**
+- Visual representation of AI agent network
+- Agent activity monitoring dashboard
+- Designed for Chain-of-Thought reasoning visualization
+- Human-in-the-loop approval architecture
+
+---
+
+### Market Intelligence
+
+![Insights](./docs/screenshots/insights.png)
+
+**Energy News Aggregation:**
+- Real-time headlines from Reuters, Bloomberg, industry publications
+- Texas grid and ERCOT-focused content filtering
+- Article summaries with source attribution
+
+---
+
+## Technology Stack
+
+| Layer | Technology |
+|-------|------------|
+| Frontend | React 18, TypeScript, Tailwind CSS |
+| AI Engine | Google Gemini Pro (multimodal) |
+| 3D Visualization | CesiumJS with Cesium Ion |
+| Data Services | GridStatus.io, EIA, NewsAPI, VisualCrossing |
+| Governance | Custom NIST AI RMF implementation |
+
+---
+
+## Getting Started
 
 ### Prerequisites
 
-- Node.js (v18+)
-- Modern Browser (Chrome/Edge recommended)
-- **API Keys** (Optional - Demo Mode works without):
-  - [Google AI Studio](https://aistudio.google.com/) (Gemini)
-  - [GridStatus.io](https://www.gridstatus.io/api)
-  - [Cesium Ion](https://cesium.com/ion/) (3D map)
+- Node.js v18+
+- Modern browser (Chrome/Edge recommended)
+- API keys (optional — demo mode works without)
 
 ### Installation
 
 ```bash
-git clone https://github.com/your-username/gridguard-ai.git
-cd gridguard-ai
+git clone https://github.com/demarcus-crump/GridGuard-AI.git
+cd GridGuard-AI
 npm install
 
-# Create .env.local and add your API keys (optional)
+# Optional: Add API keys for live data
 cp .env.example .env.local
+# Edit .env.local with your keys
 
 npm run dev
 ```
 
-Open `http://localhost:3000` in your browser.
+Access the platform at `http://localhost:3000`
 
 ### Demo Mode
 
-The platform works out-of-the-box in **Demo Mode** with synthetic data. No API keys required.
-
-To toggle Demo Mode:
-1. Open browser console
-2. Run: `localStorage.setItem('DEMO_MODE', 'true')`
-3. Refresh the page
+The platform operates in **Demo Mode** by default with synthetic data. No API keys required for evaluation.
 
 ---
 
-## 📁 Project Structure
+## Project Structure
 
 ```
 gridguard-ai/
-├── pages/                 # Route Views
-│   ├── Dashboard.tsx      # Main control panel
-│   ├── DigitalTwin.tsx    # 3D CesiumJS map
-│   ├── Governance.tsx     # AI compliance dashboard
-│   ├── CyberSim.tsx       # Attack simulation
-│   ├── Research.tsx       # Data intelligence
-│   └── AuditLog.tsx       # Immutable event log
+├── pages/                    # Application views
+│   ├── Dashboard.tsx         # Operations center
+│   ├── DigitalTwin.tsx       # 3D Grid Recon
+│   ├── Governance.tsx        # AI compliance
+│   ├── CyberSim.tsx          # Attack simulation
+│   └── Research.tsx          # Knowledge base
 ├── services/
-│   ├── genAiService.ts    # Gemini integration
-│   ├── agentOrchestrator.ts # Multi-agent system
-│   ├── safetyGuard.ts     # Physics guardrails
-│   ├── auditService.ts    # SHA-256 logging
-│   ├── biasTestingService.ts # Fairness testing
-│   ├── modelMonitorService.ts # Drift detection
-│   ├── dataServiceFactory.ts # Demo/Real data routing
-│   ├── demoDataService.ts # Synthetic data
-│   └── apiService.ts      # Real API calls
+│   ├── genAiService.ts       # Gemini integration
+│   ├── agentOrchestrator.ts  # Multi-agent framework
+│   ├── safetyGuard.ts        # Physics guardrails
+│   ├── auditService.ts       # Cryptographic logging
+│   └── dataServiceFactory.ts # Demo/production routing
 ├── components/
-│   ├── Chat/              # AI assistant
-│   ├── Common/            # UI components
-│   ├── Layout/            # Navigation
-│   └── MapErrorBoundary.tsx # Crash protection
+│   ├── MapErrorBoundary.tsx  # Crash protection
+│   └── ...
 └── docs/
-    ├── ARCHITECTURE.md    # Technical architecture
-    ├── ROADMAP.md         # Feature roadmap
-    └── screenshots/       # Feature screenshots
+    ├── ARCHITECTURE.md       # Technical documentation
+    └── ROADMAP.md            # Feature roadmap
 ```
 
 ---
 
-## 📊 Navigation
-
-| Route | Page | Description |
-|-------|------|-------------|
-| `/` | Dashboard | Real-time grid metrics, predictive alerts |
-| `/recon` | Grid Recon | 3D digital twin with Cesium |
-| `/insights` | Insights | AI analysis & recommendations |
-| `/agents` | Orchestrator | Multi-agent visualization |
-| `/knowledge` | Knowledge Base | RAG document upload |
-| `/research` | Research | White papers & data import |
-| `/analytics` | Analytics | Charts & trends |
-| `/historical` | Historical | Playback & incident recordings |
-| `/scenarios` | Scenarios | What-if simulations |
-| `/reports` | Reports | NERC CIP compliance docs |
-| `/audit` | Audit Trail | Immutable event log |
-| `/cyber-sim` | Cyber Sim | Attack training |
-| `/governance` | Governance | AI fairness & monitoring |
-
----
-
-## 🔐 AI Governance
-
-GridGuard AI is aligned with **NIST AI RMF 1.0**:
-
-| Function | Status |
-|----------|--------|
-| **GOVERN** | ✅ 90% |
-| **MAP** | ✅ 85% |
-| **MEASURE** | ✅ 95% |
-| **MANAGE** | ✅ 95% |
-
-See [AI_GOVERNANCE_FRAMEWORK.md](AI_GOVERNANCE_FRAMEWORK.md) for details.
-
----
-
-## 📄 Documentation
+## Documentation
 
 | Document | Description |
 |----------|-------------|
-| [AI_GOVERNANCE_FRAMEWORK.md](AI_GOVERNANCE_FRAMEWORK.md) | NIST AI RMF alignment |
+| [AI_GOVERNANCE_FRAMEWORK.md](AI_GOVERNANCE_FRAMEWORK.md) | NIST AI RMF alignment details |
 | [AI_SYSTEMS_CATALOG.md](AI_SYSTEMS_CATALOG.md) | AI component registry |
 | [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) | Technical architecture |
-| [docs/ROADMAP.md](docs/ROADMAP.md) | Feature roadmap |
-| [CONTRIBUTING.md](CONTRIBUTING.md) | Contribution guide |
-| [SECURITY.md](SECURITY.md) | Security policy |
+| [SECURITY.md](SECURITY.md) | Security policies |
+| [CONTRIBUTING.md](CONTRIBUTING.md) | Contribution guidelines |
 
 ---
 
-## 🏗️ Commercial Readiness
+## Security
 
-### Grid Recon (3D Map) - Production Ready ✅
-- ✅ Debug logging removed
-- ✅ API token secured in environment variables
-- ✅ Error boundary crash protection
-- ✅ Automatic Esri fallback for reliability
-- ✅ React Strict Mode compatibility
-- ✅ Full camera controls (zoom, pan, rotate, fly-to)
-- ✅ Layer management (Commercial, Military, Agricultural)
-- ✅ 3D asset visualization
-
-### Data Architecture - Clean Separation ✅
-- ✅ Factory pattern for Demo/Real mode switching
-- ✅ Mock data isolated in `demoDataService.ts`
-- ✅ Real API calls in `apiService.ts`
-- ✅ Single entry point via `dataServiceFactory.ts`
+- All API credentials loaded via environment variables
+- No hardcoded secrets in source code
+- `.env.local` excluded from version control
+- See [SECURITY.md](SECURITY.md) for vulnerability reporting
 
 ---
 
-## ⚠️ Disclaimer
+## Disclaimer
 
-This software is a **prototype**. It is intended for demonstration and evaluation purposes. Not certified for control of actual critical infrastructure.
-
----
-
-## 📄 License
-
-MIT License - See [LICENSE](LICENSE) for details.
+This software is an **enterprise prototype** intended for demonstration and evaluation purposes. It is **not certified for direct control of production critical infrastructure**. Deployment in operational environments requires additional validation, security hardening, and regulatory approval.
 
 ---
 
-## 🙏 Acknowledgments
+## Business Inquiries
+
+For enterprise licensing, custom integration, or partnership opportunities:
+
+**DeMarcus Crump**  
+[GitHub](https://github.com/demarcus-crump) | [LinkedIn](https://linkedin.com/in/demarcuscrump)
+
+---
+
+## License
+
+MIT License — See [LICENSE](LICENSE) for details.
+
+---
+
+## Acknowledgments
 
 Built with:
 - [React](https://react.dev/) + [TypeScript](https://www.typescriptlang.org/)
 - [Google Gemini Pro](https://ai.google.dev/)
 - [CesiumJS](https://cesium.com/)
 - [GridStatus.io](https://www.gridstatus.io/)
-- [Tailwind CSS](https://tailwindcss.com/)
