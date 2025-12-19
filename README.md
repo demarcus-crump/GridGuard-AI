@@ -5,6 +5,12 @@
 ![Status](https://img.shields.io/badge/status-Enterprise%20Prototype-orange)
 ![Compliance](https://img.shields.io/badge/NIST%20AI%20RMF-1.0%20Aligned-brightgreen)
 
+![React](https://img.shields.io/badge/React-18-61DAFB?logo=react)
+![TypeScript](https://img.shields.io/badge/TypeScript-5.0-3178C6?logo=typescript)
+![Gemini](https://img.shields.io/badge/Gemini%20Pro-AI-4285F4?logo=google)
+![CesiumJS](https://img.shields.io/badge/CesiumJS-3D%20Globe-6366F1)
+![Tailwind](https://img.shields.io/badge/Tailwind-CSS-06B6D4?logo=tailwindcss)
+
 > **Cognitive Grid Defense & Management Platform**  
 > AI-powered decision support for critical energy infrastructure operators, designed for government, utility, and enterprise deployment.
 
