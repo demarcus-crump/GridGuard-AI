@@ -137,14 +137,25 @@ export const Sidebar: React.FC<SidebarProps> = ({ isMobileOpen, onMobileClose })
   // Use Global Grid Context
   const { safetyState, toggleSafety, connectionStatus } = useGrid();
 
-  // Initialize from LocalStorage or Default to Dark Mode
+  // Initialize from LocalStorage, or OS Preference, or default to Dark Mode
   const [isDarkMode, setIsDarkMode] = useState(() => {
     const saved = localStorage.getItem('THEME_MODE');
+
+    // Priority 1: User's explicit saved preference
     if (saved === 'light') {
       document.body.classList.add('light-mode');
       return false;
     }
-    return true;
+    if (saved === 'dark') {
+      return true;
+    }
+
+    // Priority 2: OS preference (for first-time visitors)
+    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+    if (!prefersDark) {
+      document.body.classList.add('light-mode');
+    }
+    return prefersDark;
   });
 
   const toggleTheme = () => {

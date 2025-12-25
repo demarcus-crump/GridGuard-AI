@@ -530,6 +530,32 @@ export const apiService = {
    */
   getAgriculturalData: async (): Promise<any[]> => {
     return [];
+  },
+
+  /**
+   * Fetch real-time transmission congestion data
+   * 
+   * COMMERCIAL NOTE: This is a stub. Connect to ERCOT Congestion API
+   * or GridStatus.io transmission constraints endpoint for production.
+   */
+  getCongestionData: async (): Promise<import('../types').CongestionZone[]> => {
+    console.warn('[API] getCongestionData: Real congestion API not connected yet. Returning empty array.');
+    return [];
+  },
+
+  /**
+   * Get ERCOT grid nodes (power generation assets)
+   * 
+   * PRODUCTION NOTE: Connect to EIA API or GridStatus.io power plants endpoint.
+   * This returns empty in production until the real API is connected.
+   * 
+   * @returns Empty array - no hardcoded fallbacks (honest mode)
+   */
+  getGridNodes: async (): Promise<import('./dataServiceFactory').PowerAsset[]> => {
+    console.warn('[API] getGridNodes: Real power plant API not connected yet. Returning empty array.');
+    // HONEST MODE: Return empty rather than fake data
+    // Connect to: https://api.eia.gov/v2/electricity/operating-generator-capacity
+    return [];
   }
 };
 

@@ -14,6 +14,7 @@
 
 import { notificationService } from './notificationService';
 import { auditService } from './auditService';
+import { agentOrchestrator, AgentLog } from './agentOrchestrator';
 
 // ============================================================================
 // TYPES
@@ -70,6 +71,19 @@ export interface SimulationState {
         responseTime: number;
     }>;
     affectedAssets: string[];
+}
+
+// ============================================================================
+// LIVE THREAT MODE TYPES
+// ============================================================================
+
+export interface LiveThreatEvent {
+    id: string;
+    name: string;
+    severity: 'low' | 'medium' | 'high' | 'critical';
+    source: string;
+    timestamp: Date;
+    rawLog?: AgentLog;
 }
 
 // ============================================================================
@@ -462,6 +476,49 @@ class CyberSimService {
 
     private notifyListeners() {
         this.listeners.forEach(l => l(this.state));
+    }
+
+    // ========================================================================
+    // LIVE THREAT MODE - Real-time Agent Orchestrator Integration
+    // ========================================================================
+
+    /**
+     * Subscribe to live threat events from the Agent Orchestrator.
+     * Converts CRITICAL and WARNING agent logs into threat events.
+     * 
+     * This is the "Honest" mode - shows real AI detections, not preset scenarios.
+     * 
+     * @param onEvent Callback fired when a new threat is detected
+     * @returns Unsubscribe function
+     */
+    public subscribeToLiveThreats(onEvent: (event: LiveThreatEvent) => void): () => void {
+        return agentOrchestrator.subscribeLogs((logs) => {
+            // Get the most recent log entry
+            const latestLog = logs[logs.length - 1];
+            if (!latestLog) return;
+
+            // Only elevate CRITICAL or WARNING logs to "Threat" status
+            if (latestLog.type === 'CRITICAL' || latestLog.type === 'WARNING') {
+                const threatEvent: LiveThreatEvent = {
+                    id: Date.now().toString() + '-' + Math.random().toString(36).substr(2, 9),
+                    name: `AGENT ALERT: ${latestLog.message}`,
+                    severity: latestLog.type === 'CRITICAL' ? 'critical' : 'medium',
+                    source: latestLog.source,
+                    timestamp: new Date(latestLog.timestamp),
+                    rawLog: latestLog
+                };
+
+                onEvent(threatEvent);
+
+                // Also log to audit trail
+                auditService.log({
+                    operatorId: 'LIVE_THREAT_MONITOR',
+                    eventType: 'AI_RECOMMENDATION',
+                    resource: 'CYBER_SIM_LIVE',
+                    details: `Threat detected: ${latestLog.message} (Severity: ${threatEvent.severity})`
+                });
+            }
+        });
     }
 }
 

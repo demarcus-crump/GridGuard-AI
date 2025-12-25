@@ -394,7 +394,7 @@ export const Historical: React.FC = () => {
                                 </Button>
                             </div>
                         }>
-                            <div className="h-full w-full bg-[#0d1117] rounded border border-[var(--border-muted)] p-4 overflow-auto font-mono text-xs text-[var(--text-secondary)]">
+                            <div className="h-full w-full bg-[var(--bg-primary)] rounded border border-[var(--border-muted)] p-4 overflow-auto font-mono text-xs text-[var(--text-secondary)]">
                                 {generatedJson ? (
                                     <pre className="whitespace-pre-wrap break-all">{generatedJson.substring(0, 2000)} {generatedJson.length > 2000 && '...'}</pre>
                                 ) : (
@@ -417,8 +417,8 @@ export const Historical: React.FC = () => {
                                     <div
                                         key={recording.id}
                                         className={`p-4 rounded border transition-all cursor-pointer ${selectedRecording?.id === recording.id
-                                                ? 'bg-[var(--status-info-muted)] border-[var(--status-info)]'
-                                                : 'bg-[var(--bg-tertiary)] border-[var(--border-default)] hover:border-[var(--border-emphasis)]'
+                                            ? 'bg-[var(--status-info-muted)] border-[var(--status-info)]'
+                                            : 'bg-[var(--bg-tertiary)] border-[var(--border-default)] hover:border-[var(--border-emphasis)]'
                                             }`}
                                         onClick={() => setSelectedRecording(recording)}
                                     >
@@ -430,9 +430,9 @@ export const Historical: React.FC = () => {
                                                 </div>
                                             </div>
                                             <span className={`text-[9px] font-bold px-2 py-0.5 rounded ${recording.metadata.severity === 'CRITICAL' ? 'bg-[var(--status-critical)] text-white' :
-                                                    recording.metadata.severity === 'MAJOR' ? 'bg-[var(--status-warning)] text-black' :
-                                                        recording.metadata.severity === 'MODERATE' ? 'bg-[var(--status-info)] text-white' :
-                                                            'bg-[var(--bg-secondary)] text-[var(--text-muted)]'
+                                                recording.metadata.severity === 'MAJOR' ? 'bg-[var(--status-warning)] text-black' :
+                                                    recording.metadata.severity === 'MODERATE' ? 'bg-[var(--status-info)] text-white' :
+                                                        'bg-[var(--bg-secondary)] text-[var(--text-muted)]'
                                                 }`}>
                                                 {recording.metadata.severity}
                                             </span>

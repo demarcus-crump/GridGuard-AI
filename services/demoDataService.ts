@@ -209,51 +209,38 @@ export const demoDataService = {
     },
 
     /**
- * Get simulated news headlines
- */
-    getMarketNews: async (): Promise<Array<{ title: string; source: { name: string }; url: string; description: string; publishedAt: string }>> => {
-        const now = new Date();
+  * Get simulated news headlines
+  */
+    getMarketNews: async (): Promise<Array<{ title: string; source: string; url: string }>> => {
         return [
             {
                 title: 'ERCOT projects record summer demand as Texas grows',
-                source: { name: 'Houston Chronicle' },
-                description: 'Texas grid operator ERCOT forecasts peak summer demand could reach 85,000 MW this year, driven by population growth and extreme heat. New generation capacity is being added to meet the surge.',
-                publishedAt: new Date(now.getTime() - 2 * 60 * 60 * 1000).toISOString(), // 2 hours ago
+                source: 'Houston Chronicle',
                 url: '#'
             },
             {
                 title: 'Wind generation reaches 30GW milestone in ERCOT',
-                source: { name: 'Reuters' },
-                description: 'Texas wind farms generated over 30 gigawatts of power for the first time, setting a new record. Wind now accounts for nearly 40% of ERCOT\'s total generation capacity.',
-                publishedAt: new Date(now.getTime() - 5 * 60 * 60 * 1000).toISOString(), // 5 hours ago
+                source: 'Reuters',
                 url: '#'
             },
             {
                 title: 'New 500MW solar farm approved for West Texas',
-                source: { name: 'Austin Business Journal' },
-                description: 'State regulators approved construction of a massive solar installation near Midland. The project will add significant renewable capacity and create hundreds of jobs during construction.',
-                publishedAt: new Date(now.getTime() - 8 * 60 * 60 * 1000).toISOString(), // 8 hours ago
+                source: 'Austin Business Journal',
                 url: '#'
             },
             {
                 title: 'Battery storage projects surge across Texas grid',
-                source: { name: 'Energy News Network' },
-                description: 'Over 2,000 MW of battery energy storage systems are now operational in ERCOT, helping to stabilize the grid during peak demand and renewable energy fluctuations.',
-                publishedAt: new Date(now.getTime() - 12 * 60 * 60 * 1000).toISOString(), // 12 hours ago
+                source: 'Energy News Network',
                 url: '#'
             },
             {
                 title: 'Natural gas prices drop amid mild winter weather',
-                source: { name: 'Bloomberg Energy' },
-                description: 'Warmer-than-expected temperatures across Texas have reduced heating demand, causing natural gas prices at Houston Ship Channel to fall 15% this week.',
-                publishedAt: new Date(now.getTime() - 18 * 60 * 60 * 1000).toISOString(), // 18 hours ago
+                source: 'Bloomberg Energy',
                 url: '#'
             },
             {
                 title: 'ERCOT implements new demand response programs',
-                source: { name: 'Utility Dive' },
-                description: 'The grid operator launched enhanced demand response initiatives, allowing commercial customers to reduce load during peak hours in exchange for financial incentives.',
-                publishedAt: new Date(now.getTime() - 24 * 60 * 60 * 1000).toISOString(), // 1 day ago
+                source: 'Utility Dive',
                 url: '#'
             }
         ];
@@ -345,6 +332,32 @@ export const demoDataService = {
         return [
             { name: "West Texas Cotton Belt", type: "crop", bounds: [[-102.0, 34.0], [-100.0, 34.0], [-100.0, 32.0], [-102.0, 32.0]], yield: "High", status: "harvesting", desc: "Major agricultural corridor. Potential conflict with wind turbine placement." },
             { name: "Rice Belt Coast", type: "crop", bounds: [[-96.5, 29.5], [-95.0, 29.5], [-95.0, 28.5], [-96.5, 28.5]], yield: "Prime", status: "stable", desc: "Strategic crop zone. Requires thermal management for nearby infrastructure." }
+        ];
+    },
+
+    /**
+     * Get Congestion Data (Transmission Constraints)
+     * DEMO MODE: Returns empty array to match production behavior
+     */
+    getCongestionData: async (): Promise<import('../types').CongestionZone[]> => {
+        console.warn('[DEMO] getCongestionData: No congestion data in demo mode. Connect ERCOT API for production.');
+        return [];
+    },
+
+    /**
+     * Get ERCOT grid nodes (power generation assets)
+     * DEMO MODE: Returns simulated power plant data
+     */
+    getGridNodes: async (): Promise<import('../services/dataServiceFactory').PowerAsset[]> => {
+        // Simulated ERCOT power plants - these would come from EIA/GridStatus API in production
+        return [
+            { lon: -102.5, lat: 31.5, name: "Permian Wind Complex", type: "wind", capacity: "2,400 MW", status: "online", desc: "Highest output wind cluster in West Texas. Critical for night-baseline." },
+            { lon: -101.2, lat: 34.8, name: "Panhandle Wind Farm", type: "wind", capacity: "1,800 MW", status: "online", desc: "Steady export channel to North Hub. N-1 constraint active." },
+            { lon: -100.8, lat: 32.4, name: "Midland Wind Corridor", type: "wind", capacity: "950 MW", status: "online", desc: "Local supply for Permian basin industrial load." },
+            { lon: -104.0, lat: 31.0, name: "West Texas Solar", type: "solar", capacity: "800 MW", status: "online", desc: "Peak solar density node. Subject to frequent cloud-cover volatility." },
+            { lon: -95.2, lat: 29.6, name: "Houston Energy Center", type: "gas", capacity: "3,200 MW", status: "online", desc: "Critical coastal thermal base. Essential for grid inertia." },
+            { lon: -96.5, lat: 28.7, name: "STP Nuclear Station", type: "nuclear", capacity: "2,700 MW", status: "online", desc: "Uninterruptible base load. Priority 1 safety exclusion zone." },
+            { lon: -97.8, lat: 33.4, name: "Comanche Peak Nuclear", type: "nuclear", capacity: "2,400 MW", status: "online", desc: "Primary inertia source for DFW reliability zone." }
         ];
     }
 };

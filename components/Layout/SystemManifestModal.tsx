@@ -12,7 +12,7 @@ export const SystemManifestModal: React.FC<SystemManifestModalProps> = ({ isOpen
 
    return (
       <div className="fixed inset-0 z-[200] flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm animate-in fade-in duration-300">
-         <div className="bg-[#0D1117] border border-[var(--border-default)] rounded-xl shadow-2xl w-full max-w-4xl overflow-hidden flex flex-col max-h-[90vh]">
+         <div className="bg-[var(--bg-secondary)] border border-[var(--border-default)] rounded-xl shadow-2xl w-full max-w-4xl overflow-hidden flex flex-col max-h-[90vh]">
 
             {/* Header */}
             <div className="p-6 border-b border-[var(--border-muted)] bg-[var(--bg-secondary)] flex justify-between items-start">

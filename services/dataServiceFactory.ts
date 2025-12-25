@@ -4,17 +4,30 @@
  * 
  * Factory that returns the appropriate data service based on mode.
  * 
- * This is the SINGLE entry point for all data fetching in the app.
- * It ensures complete separation between demo and production data.
+ * COMMERCIAL ARCHITECTURE:
+ * - Demo service is DYNAMICALLY imported only when needed
+ * - Production builds will tree-shake the demo module entirely
+ * - This prevents contamination of production bundles
  */
 
 import { apiService } from './apiService';
-import { demoDataService } from './demoDataService';
-import { GridStatus, MetricData, RiskTier } from '../types';
+import { GridStatus, MetricData, CongestionZone } from '../types';
 
 // ============================================================================
-// DATA SERVICE INTERFACE
+// DATA SERVICE INTERFACE (The Contract)
 // ============================================================================
+// TYPES
+// ============================================================================
+
+export interface PowerAsset {
+    lon: number;
+    lat: number;
+    name: string;
+    type: 'wind' | 'solar' | 'gas' | 'nuclear' | 'hydro' | 'coal' | 'battery';
+    capacity: string;
+    status: 'online' | 'offline' | 'maintenance';
+    desc: string;
+}
 
 export interface DataService {
     getGridStatus: () => Promise<GridStatus | null>;
@@ -34,6 +47,8 @@ export interface DataService {
     getCommercialOpportunities: () => Promise<any[]>;
     getRestrictedZones: () => Promise<any[]>;
     getAgriculturalData: () => Promise<any[]>;
+    getCongestionData: () => Promise<CongestionZone[]>;
+    getGridNodes: () => Promise<PowerAsset[]>;
 }
 
 // ============================================================================
@@ -45,113 +60,146 @@ const isDemoMode = (): boolean => {
 };
 
 // ============================================================================
-// DATA SERVICE FACTORY
+// DYNAMIC IMPORT FIREWALL
 // ============================================================================
 
 /**
- * Get the appropriate data service based on current mode.
- * 
- * DEMO MODE: Returns demoDataService (synthetic data)
- * REAL MODE: Returns apiService (real API calls)
+ * Cached demo service instance (lazy loaded)
+ * Only populated when demo mode is activated
  */
-export const getDataService = (): DataService => {
-    if (isDemoMode()) {
-        return demoDataService;
-    }
-    return apiService;
-};
+let cachedDemoService: DataService | null = null;
 
 /**
- * Wrapper functions that automatically select the right service.
- * Use these throughout the app for convenience.
+ * Asynchronously get the appropriate data service based on current mode.
+ * 
+ * CRITICAL: This function uses dynamic import() for the demo service.
+ * This ensures the demo code is:
+ * 1. NOT bundled in production when not needed
+ * 2. Loaded on-demand only in demo mode
+ * 3. Tree-shaken by Vite/Rollup in production builds
+ * 
+ * @returns Promise<DataService> The appropriate service for current mode
+ */
+const getDataServiceAsync = async (): Promise<DataService> => {
+    if (isDemoMode()) {
+        // Dynamic import - demo bundle is separate chunk
+        if (!cachedDemoService) {
+            console.log('[FACTORY] Demo mode detected. Loading demo service...');
+            const module = await import('./demoDataService');
+            cachedDemoService = module.demoDataService as DataService;
+        }
+        return cachedDemoService;
+    }
+    // Production mode - return real API service
+    return apiService as DataService;
+};
+
+// ============================================================================
+// PUBLIC API (Wrapper with Dynamic Resolution)
+// ============================================================================
+
+/**
+ * Unified data service interface.
+ * All methods automatically resolve to the correct backend (demo/prod).
+ * Uses dynamic import to prevent demo module from contaminating prod bundle.
  */
 export const dataService = {
     getGridStatus: async () => {
-        const service = getDataService();
+        const service = await getDataServiceAsync();
         return service.getGridStatus();
     },
 
     getGridFrequency: async () => {
-        const service = getDataService();
+        const service = await getDataServiceAsync();
         return service.getGridFrequency();
     },
 
     getCurrentLoad: async () => {
-        const service = getDataService();
+        const service = await getDataServiceAsync();
         return service.getCurrentLoad();
     },
 
     getGeneration: async () => {
-        const service = getDataService();
+        const service = await getDataServiceAsync();
         return service.getGeneration();
     },
 
     getFuelMix: async () => {
-        const service = getDataService();
+        const service = await getDataServiceAsync();
         return service.getFuelMix();
     },
 
     getMarketPrices: async () => {
-        const service = getDataService();
+        const service = await getDataServiceAsync();
         return service.getMarketPrices();
     },
 
     getForecast: async (currentLoad?: number) => {
-        const service = getDataService();
+        const service = await getDataServiceAsync();
         return service.getForecast(currentLoad);
     },
 
     getRegionalStatus: async () => {
-        const service = getDataService();
+        const service = await getDataServiceAsync();
         return service.getRegionalStatus();
     },
 
     getAlerts: async () => {
-        const service = getDataService();
+        const service = await getDataServiceAsync();
         return service.getAlerts();
     },
 
     getMarketNews: async () => {
-        const service = getDataService();
+        const service = await getDataServiceAsync();
         return service.getMarketNews();
     },
 
     getInterconnectionQueue: async () => {
-        const service = getDataService();
+        const service = await getDataServiceAsync();
         return service.getInterconnectionQueue();
     },
 
     getSolarData: async () => {
-        const service = getDataService();
+        const service = await getDataServiceAsync();
         return service.getSolarData();
     },
 
     getHistorical: async (start?: string, end?: string) => {
-        const service = getDataService();
+        const service = await getDataServiceAsync();
         return service.getHistorical(start, end);
     },
 
     getActiveWildfires: async () => {
-        const service = getDataService();
+        const service = await getDataServiceAsync();
         return service.getActiveWildfires();
     },
 
     getCommercialOpportunities: async () => {
-        const service = getDataService();
-        return (service as any).getCommercialOpportunities?.() || [];
+        const service = await getDataServiceAsync();
+        return service.getCommercialOpportunities();
     },
 
     getRestrictedZones: async () => {
-        const service = getDataService();
-        return (service as any).getRestrictedZones?.() || [];
+        const service = await getDataServiceAsync();
+        return service.getRestrictedZones();
     },
 
     getAgriculturalData: async () => {
-        const service = getDataService();
-        return (service as any).getAgriculturalData?.() || [];
+        const service = await getDataServiceAsync();
+        return service.getAgriculturalData();
     },
 
-    // Utility
+    getCongestionData: async (): Promise<CongestionZone[]> => {
+        const service = await getDataServiceAsync();
+        return service.getCongestionData();
+    },
+
+    getGridNodes: async (): Promise<PowerAsset[]> => {
+        const service = await getDataServiceAsync();
+        return service.getGridNodes();
+    },
+
+    // Utility - synchronous check (no dynamic import needed)
     isDemoMode
 };
 

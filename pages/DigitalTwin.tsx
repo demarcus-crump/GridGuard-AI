@@ -35,6 +35,22 @@ const MAP_MODES: Record<string, any> = {
   '2.5D': 'COLUMBUS_VIEW'
 };
 
+// Asset visualization config (moved outside component to avoid re-renders)
+const ASSET_CONFIG: Record<string, { color: string; label: string; size: number }> = {
+  wind: { color: '#00FFFF', label: 'W', size: 14 },
+  solar: { color: '#FFD700', label: 'S', size: 12 },
+  gas: { color: '#FFA500', label: 'G', size: 16 },
+  nuclear: { color: '#FF00FF', label: 'N', size: 18 },
+  hydro: { color: '#0000FF', label: 'H', size: 14 },
+  coal: { color: '#444444', label: 'C', size: 14 },
+  battery: { color: '#00FF00', label: 'B', size: 12 },
+  oil: { color: '#444444', label: 'O', size: 12 },
+  datacenter: { color: '#00FFFF', label: 'D', size: 20 },
+  military: { color: 'rgba(255,0,0,0.4)', label: 'MIL', size: 15 },
+  nogo: { color: 'rgba(128,0,128,0.4)', label: 'NG', size: 15 },
+  crop: { color: 'rgba(0,100,0,0.3)', label: 'AGRI', size: 15 }
+};
+
 export const DigitalTwin: React.FC = () => {
   const [cesiumReady, setCesiumReady] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -43,6 +59,7 @@ export const DigitalTwin: React.FC = () => {
   const [isCommercialVisible, setIsCommercialVisible] = useState(false);
   const [isMilitaryVisible, setIsMilitaryVisible] = useState(false);
   const [isAgriVisible, setIsAgriVisible] = useState(false);
+  const [isPowerVisible, setIsPowerVisible] = useState(true); // Power plants layer on by default
   const [mapMode, setMapMode] = useState('3D');
   const [isTerrainEnabled, setIsTerrainEnabled] = useState(true);
   const [selectedAsset, setSelectedAsset] = useState<any | null>(null);
@@ -52,6 +69,7 @@ export const DigitalTwin: React.FC = () => {
   const satelliteLayerRef = useRef<any>(null);
   const dataSourcesRef = useRef<Record<string, any>>({});
   const selectionRingRef = useRef<any>(null);
+  const powerRef = useRef(isPowerVisible);
 
   // Visibility Refs to fix stale closures in Cesium callbacks
   const commercialRef = useRef(isCommercialVisible);
@@ -61,6 +79,7 @@ export const DigitalTwin: React.FC = () => {
   useEffect(() => { commercialRef.current = isCommercialVisible; }, [isCommercialVisible]);
   useEffect(() => { militaryRef.current = isMilitaryVisible; }, [isMilitaryVisible]);
   useEffect(() => { agriRef.current = isAgriVisible; }, [isAgriVisible]);
+  useEffect(() => { powerRef.current = isPowerVisible; }, [isPowerVisible]);
 
   useEffect(() => {
     let mounted = true; // Flag to track if component is still mounted
@@ -300,117 +319,110 @@ export const DigitalTwin: React.FC = () => {
         // Start animation
         animateFlow();
 
-        // Power generation assets
-        const powerAssets = [
-          { lon: -102.5, lat: 31.5, name: "Permian Wind Complex", type: "wind", capacity: "2,400 MW", status: "online", desc: "Highest output wind cluster in West Texas. Critical for night-baseline." },
-          { lon: -101.2, lat: 34.8, name: "Panhandle Wind Farm", type: "wind", capacity: "1,800 MW", status: "online", desc: "Steady export channel to North Hub. N-1 constraint active." },
-          { lon: -100.8, lat: 32.4, name: "Midland Wind Corridor", type: "wind", capacity: "950 MW", status: "online", desc: "Local supply for Permian basin industrial load." },
-          { lon: -104.0, lat: 31.0, name: "West Texas Solar", type: "solar", capacity: "800 MW", status: "online", desc: "Peak solar density node. Subject to frequent cloud-cover volatility." },
-          { lon: -95.2, lat: 29.6, name: "Houston Energy Center", type: "gas", capacity: "3,200 MW", status: "online", desc: "Critical coastal thermal base. Essential for grid inertia." },
-          { lon: -96.5, lat: 28.7, name: "STP Nuclear Station", type: "nuclear", capacity: "2,700 MW", status: "online", desc: "Uninterruptible base load. Priority 1 safety exclusion zone." },
-          { lon: -97.8, lat: 33.4, name: "Comanche Peak Nuclear", type: "nuclear", capacity: "2,400 MW", status: "online", desc: "Primary inertia source for DFW reliability zone." }
-        ];
-
-        const assetConfig: Record<string, { color: any; label: string; size: number }> = {
-          wind: { color: Cesium.Color.CYAN, label: "W", size: 14 },
-          solar: { color: Cesium.Color.GOLD, label: "S", size: 12 },
-          gas: { color: Cesium.Color.ORANGE, label: "G", size: 16 },
-          nuclear: { color: Cesium.Color.MAGENTA, label: "N", size: 18 },
-          oil: { color: Cesium.Color.fromCssColorString('#444444'), label: "O", size: 12 },
-          datacenter: { color: Cesium.Color.fromCssColorString('#00FFFF'), label: "D", size: 20 },
-          military: { color: Cesium.Color.RED.withAlpha(0.4), label: "MIL", size: 15 },
-          nogo: { color: Cesium.Color.PURPLE.withAlpha(0.4), label: "NG", size: 15 },
-          crop: { color: Cesium.Color.DARKGREEN.withAlpha(0.3), label: "AGRI", size: 15 }
-        };
-
-        const renderPrimaryAssets = () => {
-          if (!viewer || !viewer.entities) return;
-          powerAssets.forEach(asset => {
-            const config = assetConfig[asset.type];
-            const isOnline = asset.status === "online";
-            if (!viewer.entities) return;
-            // 3D Geometric Primitives for "Real" Item Look
-            let entityOpts: any = {
-              name: asset.name,
-              description: asset.desc,
-            };
-
-            // Height offsets to ensure objects sit ON ground (half-height)
-            if (asset.type === 'wind') {
-              // Wind Turbine: Tall Cylinder
-              entityOpts.position = Cesium.Cartesian3.fromDegrees(asset.lon, asset.lat, 60);
-              entityOpts.cylinder = {
-                length: 120,
-                topRadius: 2,
-                bottomRadius: 4,
-                material: Cesium.Color.WHITE,
-                heightReference: Cesium.HeightReference.RELATIVE_TO_GROUND
-              };
-            } else if (asset.type === 'solar') {
-              // Solar Farm: Large Flat Field
-              entityOpts.position = Cesium.Cartesian3.fromDegrees(asset.lon, asset.lat, 2);
-              entityOpts.box = {
-                dimensions: new Cesium.Cartesian3(300.0, 300.0, 5.0),
-                material: Cesium.Color.BLUE.withAlpha(0.6), // Solar panel blue
-                heightReference: Cesium.HeightReference.RELATIVE_TO_GROUND
-              };
-            } else if (asset.type === 'nuclear') {
-              // Nuclear: Cooling Tower Shape
-              entityOpts.position = Cesium.Cartesian3.fromDegrees(asset.lon, asset.lat, 80);
-              entityOpts.cylinder = {
-                length: 160,
-                topRadius: 30,
-                bottomRadius: 60,
-                material: Cesium.Color.LIGHTGRAY,
-                heightReference: Cesium.HeightReference.RELATIVE_TO_GROUND
-              };
-            } else {
-              // Gas/Thermal: Industrial Block
-              entityOpts.position = Cesium.Cartesian3.fromDegrees(asset.lon, asset.lat, 25);
-              entityOpts.box = {
-                dimensions: new Cesium.Cartesian3(120.0, 100.0, 50.0),
-                material: config.color,
-                heightReference: Cesium.HeightReference.RELATIVE_TO_GROUND
-              };
-            }
-
-            viewer.entities.add(entityOpts);
-          });
-        };
-
-        renderPrimaryAssets();
+        // PURGED: Static powerAssets array removed - now loaded dynamically via getGridNodes()
 
         // Robust Layer Management (DataSources)
         const initDataSources = () => {
           dataSourcesRef.current.commercial = new Cesium.CustomDataSource('commercial');
           dataSourcesRef.current.military = new Cesium.CustomDataSource('military');
           dataSourcesRef.current.agri = new Cesium.CustomDataSource('agri');
+          dataSourcesRef.current.power = new Cesium.CustomDataSource('power');
 
           viewer.dataSources.add(dataSourcesRef.current.commercial);
           viewer.dataSources.add(dataSourcesRef.current.military);
           viewer.dataSources.add(dataSourcesRef.current.agri);
+          viewer.dataSources.add(dataSourcesRef.current.power);
         };
         initDataSources();
 
         const updateDynamicLayers = async () => {
           const ds = dataSourcesRef.current;
-          if (!ds.commercial || !ds.military || !ds.agri) return;
+          if (!ds.commercial || !ds.military || !ds.agri || !ds.power) return;
 
           // Clear existing
           ds.commercial.entities.removeAll();
           ds.military.entities.removeAll();
           ds.agri.entities.removeAll();
+          ds.power.entities.removeAll();
 
+          // =====================================================
+          // POWER ASSETS - Dynamic from API (formerly hardcoded)
+          // =====================================================
+          if (powerRef.current) {
+            const powerAssets = await dataService.getGridNodes();
+            // HONEST EMPTY STATE: If API returns 0 nodes, map is empty (no fallback)
+            powerAssets.forEach(asset => {
+              let entityOpts: any = {
+                name: asset.name,
+                description: `${asset.desc}\n\nCapacity: ${asset.capacity}\nStatus: ${asset.status.toUpperCase()}`,
+              };
+
+              // 3D Geometric Primitives based on asset type
+              if (asset.type === 'wind') {
+                entityOpts.position = Cesium.Cartesian3.fromDegrees(asset.lon, asset.lat, 60);
+                entityOpts.cylinder = {
+                  length: 120,
+                  topRadius: 2,
+                  bottomRadius: 4,
+                  material: Cesium.Color.WHITE,
+                  heightReference: Cesium.HeightReference.RELATIVE_TO_GROUND
+                };
+              } else if (asset.type === 'solar') {
+                entityOpts.position = Cesium.Cartesian3.fromDegrees(asset.lon, asset.lat, 2);
+                entityOpts.box = {
+                  dimensions: new Cesium.Cartesian3(300.0, 300.0, 5.0),
+                  material: Cesium.Color.BLUE.withAlpha(0.6),
+                  heightReference: Cesium.HeightReference.RELATIVE_TO_GROUND
+                };
+              } else if (asset.type === 'nuclear') {
+                entityOpts.position = Cesium.Cartesian3.fromDegrees(asset.lon, asset.lat, 80);
+                entityOpts.cylinder = {
+                  length: 160,
+                  topRadius: 30,
+                  bottomRadius: 60,
+                  material: Cesium.Color.LIGHTGRAY,
+                  heightReference: Cesium.HeightReference.RELATIVE_TO_GROUND
+                };
+              } else if (asset.type === 'hydro') {
+                entityOpts.position = Cesium.Cartesian3.fromDegrees(asset.lon, asset.lat, 30);
+                entityOpts.box = {
+                  dimensions: new Cesium.Cartesian3(200.0, 80.0, 60.0),
+                  material: Cesium.Color.BLUE,
+                  heightReference: Cesium.HeightReference.RELATIVE_TO_GROUND
+                };
+              } else if (asset.type === 'battery') {
+                entityOpts.position = Cesium.Cartesian3.fromDegrees(asset.lon, asset.lat, 15);
+                entityOpts.box = {
+                  dimensions: new Cesium.Cartesian3(80.0, 80.0, 30.0),
+                  material: Cesium.Color.GREEN,
+                  heightReference: Cesium.HeightReference.RELATIVE_TO_GROUND
+                };
+              } else {
+                // Gas/Coal/Thermal: Industrial Block
+                entityOpts.position = Cesium.Cartesian3.fromDegrees(asset.lon, asset.lat, 25);
+                entityOpts.box = {
+                  dimensions: new Cesium.Cartesian3(120.0, 100.0, 50.0),
+                  material: Cesium.Color.ORANGE,
+                  heightReference: Cesium.HeightReference.RELATIVE_TO_GROUND
+                };
+              }
+
+              ds.power.entities.add(entityOpts);
+            });
+          }
+
+          // =====================================================
+          // COMMERCIAL ASSETS
+          // =====================================================
           if (commercialRef.current) {
             const assets = await dataService.getCommercialOpportunities();
             assets.forEach(asset => {
-              const config = assetConfig[asset.type];
               ds.commercial.entities.add({
                 name: asset.name,
                 description: asset.desc,
                 position: Cesium.Cartesian3.fromDegrees(asset.lon, asset.lat, asset.type === 'datacenter' ? 20 : 50),
                 box: asset.type === 'datacenter' ? {
-                  dimensions: new Cesium.Cartesian3(400.0, 300.0, 40.0), // Massive Data Center
+                  dimensions: new Cesium.Cartesian3(400.0, 300.0, 40.0),
                   material: Cesium.Color.CYAN.withAlpha(0.9),
                   outline: true,
                   outlineColor: Cesium.Color.WHITE,
@@ -432,23 +444,25 @@ export const DigitalTwin: React.FC = () => {
                   showBackground: true,
                   backgroundColor: Cesium.Color.BLACK.withAlpha(0.7),
                   verticalOrigin: Cesium.VerticalOrigin.BOTTOM,
-                  pixelOffset: new Cesium.Cartesian2(0, -60), // Raised label
+                  pixelOffset: new Cesium.Cartesian2(0, -60),
                   distanceDisplayCondition: new Cesium.DistanceDisplayCondition(0, 800000)
                 }
               });
             });
           }
 
+          // =====================================================
+          // MILITARY/RESTRICTED ZONES
+          // =====================================================
           if (militaryRef.current) {
             const zones = await dataService.getRestrictedZones();
             zones.forEach(zone => {
-              const config = assetConfig[zone.type];
               ds.military.entities.add({
                 name: zone.name,
                 description: zone.desc,
                 polygon: {
                   hierarchy: Cesium.Cartesian3.fromDegreesArray(zone.bounds.flat()),
-                  material: config.color,
+                  material: Cesium.Color.RED.withAlpha(0.4),
                   outline: true,
                   outlineColor: Cesium.Color.RED,
                   height: 200,
@@ -458,16 +472,18 @@ export const DigitalTwin: React.FC = () => {
             });
           }
 
+          // =====================================================
+          // AGRICULTURAL DATA
+          // =====================================================
           if (agriRef.current) {
             const agriData = await dataService.getAgriculturalData();
             agriData.forEach(item => {
-              const config = assetConfig[item.type];
               ds.agri.entities.add({
                 name: item.name,
                 description: item.desc,
                 polygon: {
                   hierarchy: Cesium.Cartesian3.fromDegreesArray(item.bounds.flat()),
-                  material: config.color,
+                  material: Cesium.Color.DARKGREEN.withAlpha(0.3),
                   outline: true,
                   outlineColor: Cesium.Color.GREEN.withAlpha(0.5),
                   height: 50,
@@ -477,6 +493,9 @@ export const DigitalTwin: React.FC = () => {
             });
           }
         };
+
+        // Initial load of dynamic layers (including power assets)
+        updateDynamicLayers();
 
         (viewer as any)._updateDynamicLayers = updateDynamicLayers;
 

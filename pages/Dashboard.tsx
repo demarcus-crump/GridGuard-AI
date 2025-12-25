@@ -1,10 +1,9 @@
-
 import React, { useEffect, useState } from 'react';
 import { Card } from '../components/Common/Card';
 import { Button } from '../components/Common/Button';
 import { GridMap } from '../components/Visualizations/GridMap';
 import { MetricDisplay } from '../components/Common/MetricDisplay';
-import { GridStatus, RiskTier } from '../types';
+import { GridStatus, RiskTier, CongestionZone } from '../types';
 import { StatusIndicator } from '../components/Common/StatusIndicator';
 import { ModelCard } from '../components/Common/ModelCard';
 import { ForecastChart, FuelMixDonut, ReservesGauge, PriceTrendChart } from '../components/Visualizations/Charts';
@@ -14,6 +13,7 @@ import { useGrid } from '../context/GridContext';
 import { dataService } from '../services/dataServiceFactory';
 import { Tooltip } from '../components/Common/Tooltip';
 import { predictiveService, CorridorRisk, PredictiveAlert } from '../services/predictiveService';
+import { getDispatchRecommendations, executeDispatch, SCEDAnalysisResult, DispatchDecision } from '../services/scedService';
 
 // --- SUB-COMPONENTS FOR CONTROL ROOM ---
 
@@ -147,7 +147,11 @@ export const Dashboard: React.FC = () => {
     const [priceTrendData, setPriceTrendData] = useState<any[]>([]);
     const [queueData, setQueueData] = useState<any>(null);
     const [solarData, setSolarData] = useState<any>(null);
-    const [scedProposals, setScedProposals] = useState<any[]>([]);
+    const [congestionData, setCongestionData] = useState<CongestionZone[]>([]);
+
+    // SCED Analysis State (AI-powered dispatch recommendations)
+    const [scedAnalysis, setScedAnalysis] = useState<SCEDAnalysisResult | null>(null);
+    const [scedLoading, setScedLoading] = useState(false);
 
     // Predictive Alerts State
     const [corridorRisks, setCorridorRisks] = useState<CorridorRisk[]>([]);
@@ -166,6 +170,10 @@ export const Dashboard: React.FC = () => {
             const queue = await dataService.getInterconnectionQueue();
             setQueueData(queue);
 
+            // Fetch congestion data from service (will be empty until real API connected)
+            const congestion = await dataService.getCongestionData();
+            setCongestionData(congestion);
+
             const forecast = await dataService.getForecast(loadMetric ? Number(loadMetric.value) : undefined);
             if (forecast) setForecastData(forecast);
 
@@ -173,29 +181,23 @@ export const Dashboard: React.FC = () => {
             if (prices && prices.length > 0) {
                 setPriceTrendData(prices);
 
-                // Generate SCED Proposals based on price
+                // Run SCED AI Analysis (replaces hardcoded if/else logic)
                 const currentPrice = prices[prices.length - 1].value;
-                const proposals = [];
+                const currentLoad = loadMetric ? Number(loadMetric.value) : 55000;
 
-                if (currentPrice > 50) {
-                    proposals.push({
-                        id: 'sced-1', resource: 'Battery_Storage_West', action: 'DISCHARGE',
-                        amount: 150, price: currentPrice, reason: 'Arbitrage Opp'
+                setScedLoading(true);
+                try {
+                    const analysis = await getDispatchRecommendations({
+                        currentLoadMW: currentLoad,
+                        currentPricePerMWh: currentPrice,
+                        prevPricePerMWh: prices.length > 1 ? prices[prices.length - 2].value : currentPrice
                     });
+                    setScedAnalysis(analysis);
+                } catch (e) {
+                    console.warn('[SCED] Analysis failed:', e);
+                } finally {
+                    setScedLoading(false);
                 }
-                if (loadMetric && Number(loadMetric.value) > 60000) {
-                    proposals.push({
-                        id: 'sced-2', resource: 'Peaker_Gas_Unit_4', action: 'RAMP UP',
-                        amount: 300, price: currentPrice + 10, reason: 'Capacity Shortfall'
-                    });
-                }
-                if (proposals.length === 0) {
-                    proposals.push({
-                        id: 'sced-opt', resource: 'Wind_Farm_Coastal', action: 'CURTAIL',
-                        amount: 45, price: -5, reason: 'Negative Pricing (Congestion)'
-                    });
-                }
-                setScedProposals(proposals);
             }
         };
         fetchSecondary();
@@ -214,9 +216,19 @@ export const Dashboard: React.FC = () => {
         };
     }, []);
 
-    const handleScedExecute = (id: string) => {
-        notificationService.success("SCED Command Sent", `Dispatch instruction ${id} routed to DNP3 gateway.`);
-        setScedProposals(prev => prev.filter(p => p.id !== id));
+    const handleScedExecute = async (decision: DispatchDecision) => {
+        await executeDispatch(decision);
+        notificationService.success(
+            'SCED Command Sent',
+            `${decision.action} ${decision.targetMW}MW on ${decision.resource} routed to DNP3 gateway.`
+        );
+        // Remove executed decision from the list
+        if (scedAnalysis) {
+            setScedAnalysis({
+                ...scedAnalysis,
+                decisions: scedAnalysis.decisions.filter(d => d.id !== decision.id)
+            });
+        }
     };
 
     const fuelMixChartData = fuelMix
@@ -398,7 +410,7 @@ export const Dashboard: React.FC = () => {
                             <Tooltip width="w-64" content={
                                 <div>
                                     <div className="font-bold text-[var(--status-info)] mb-1">BLUF: Economic Dispatch</div>
-                                    <div className="text-[var(--text-secondary)]">Security-Constrained Economic Dispatch engine. Runs every 5 mins to balance lowest cost generation against transmission line limits.</div>
+                                    <div className="text-[var(--text-secondary)]">Security-Constrained Economic Dispatch engine. AI analyzes market conditions to optimize generation costs.</div>
                                 </div>
                             }>
                                 <span className="border-b border-dotted border-[var(--text-muted)] cursor-help">SCED Dispatch (Optimizer)</span>
@@ -407,21 +419,76 @@ export const Dashboard: React.FC = () => {
                         className="border-l-4 border-l-[var(--status-info)] flex-1 min-h-0 flex flex-col"
                     >
                         <div className="flex flex-col flex-1 min-h-0">
-                            <div className="text-[10px] text-[var(--text-muted)] mb-3 bg-[var(--bg-tertiary)] p-2 rounded border border-[var(--border-muted)]">
-                                AI Engine recommends dispatches to minimize cost & congestion.
+                            {/* Analysis Status Header */}
+                            <div className="text-[10px] text-[var(--text-muted)] mb-3 bg-[var(--bg-tertiary)] p-2 rounded border border-[var(--border-muted)] flex justify-between items-center">
+                                <span>AI Engine: {scedAnalysis?.marketCondition || 'ANALYZING'}</span>
+                                {scedAnalysis && (
+                                    <span className="text-[var(--text-link)]">
+                                        {scedAnalysis.analysisTimeMs}ms
+                                    </span>
+                                )}
                             </div>
-                            <div className="flex-1 overflow-y-auto space-y-2 pr-1">
-                                {scedProposals.length > 0 ? scedProposals.map(p => (
-                                    <DispatchRow
-                                        key={p.id}
-                                        resource={p.resource}
-                                        action={p.action}
-                                        amount={p.amount}
-                                        price={p.price}
-                                        reason={p.reason}
-                                        onExecute={() => handleScedExecute(p.id)}
-                                    />
-                                )) : (
+
+                            <div className="flex-1 overflow-y-auto space-y-3 pr-1">
+                                {scedLoading ? (
+                                    <div className="flex flex-col items-center justify-center h-full text-[var(--text-muted)] text-xs">
+                                        <div className="animate-pulse mb-2 text-[var(--status-info)]">◉ Analyzing Market Conditions...</div>
+                                        <div className="text-[10px]">Running optimization model</div>
+                                    </div>
+                                ) : scedAnalysis && scedAnalysis.decisions.length > 0 ? (
+                                    scedAnalysis.decisions.map(decision => (
+                                        <div key={decision.id} className="bg-[var(--bg-tertiary)] border border-[var(--border-default)] rounded-lg p-3 space-y-2">
+                                            {/* Decision Header */}
+                                            <div className="flex justify-between items-start">
+                                                <div>
+                                                    <div className="text-xs font-bold text-[var(--text-primary)]">{decision.resource}</div>
+                                                    <div className={`text-[10px] font-mono ${decision.action === 'DEPLOY' ? 'text-[var(--status-normal)]' :
+                                                            decision.action === 'CURTAIL' ? 'text-[var(--status-warning)]' :
+                                                                decision.action === 'CHARGE' ? 'text-[var(--status-info)]' :
+                                                                    decision.action === 'RAMP_UP' ? 'text-[var(--status-critical)]' :
+                                                                        'text-[var(--text-secondary)]'
+                                                        }`}>
+                                                        {decision.action} {decision.targetMW}MW
+                                                    </div>
+                                                </div>
+                                                <div className="text-right">
+                                                    <div className="text-[10px] text-[var(--text-muted)]">Confidence</div>
+                                                    <div className={`text-sm font-mono font-bold ${decision.confidence > 0.8 ? 'text-[var(--status-normal)]' :
+                                                            decision.confidence > 0.6 ? 'text-[var(--status-warning)]' :
+                                                                'text-[var(--text-secondary)]'
+                                                        }`}>
+                                                        {(decision.confidence * 100).toFixed(0)}%
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            {/* Reasoning */}
+                                            <div className="border-t border-[var(--border-muted)] pt-2">
+                                                <div className="text-[10px] text-[var(--text-muted)] mb-1">Why:</div>
+                                                <ul className="text-[10px] text-[var(--text-secondary)] space-y-0.5">
+                                                    {decision.reasoning.slice(0, 2).map((reason, i) => (
+                                                        <li key={i} className="flex items-start gap-1">
+                                                            <span className="text-[var(--status-info)]">→</span>
+                                                            {reason}
+                                                        </li>
+                                                    ))}
+                                                </ul>
+                                            </div>
+
+                                            {/* Execute Button */}
+                                            {decision.action !== 'HOLD' && (
+                                                <Button
+                                                    size="sm"
+                                                    variant="primary"
+                                                    onClick={() => handleScedExecute(decision)}
+                                                    className="w-full mt-2"
+                                                >
+                                                    EXECUTE {decision.action}
+                                                </Button>
+                                            )}
+                                        </div>
+                                    ))
+                                ) : (
                                     <div className="flex flex-col items-center justify-center h-full text-[var(--text-muted)] text-xs">
                                         <div className="animate-pulse mb-2 text-[var(--status-normal)]">● System Optimized</div>
                                         No Pending Actions
@@ -431,7 +498,6 @@ export const Dashboard: React.FC = () => {
                         </div>
                     </Card>
 
-                    {/* CONGESTION MONITOR */}
                     <Card
                         title={
                             <Tooltip width="w-64" content={
@@ -444,11 +510,21 @@ export const Dashboard: React.FC = () => {
                             </Tooltip>
                         }
                         className="flex-1 min-h-0 flex flex-col"
+                        isEmpty={congestionData.length === 0}
+                        emptyTitle="No Active Congestion Events"
+                        emptyMessage="Real-time congestion data unavailable. Connect ERCOT API for production monitoring."
+                        onConfigure={() => setIsSettingsOpen(true)}
                     >
                         <div className="flex-1 overflow-y-auto space-y-4 pt-2 pr-1">
-                            <CongestionBar source="West" target="North" loadPct={92} spread={45.20} />
-                            <CongestionBar source="South" target="Houston" loadPct={65} spread={12.50} />
-                            <CongestionBar source="North" target="Houston" loadPct={23} spread={4.10} />
+                            {congestionData.map((zone) => (
+                                <CongestionBar
+                                    key={zone.id}
+                                    source={zone.name.split(' → ')[0] || zone.name}
+                                    target={zone.name.split(' → ')[1] || ''}
+                                    loadPct={zone.loadPct}
+                                    spread={zone.spread}
+                                />
+                            ))}
                         </div>
                     </Card>
 

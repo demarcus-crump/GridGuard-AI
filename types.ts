@@ -51,3 +51,16 @@ export interface ConsensusResult {
   riskTier: RiskTier;
   divergenceReason?: string;
 }
+
+/**
+ * CongestionZone - Real-time transmission congestion data
+ * Used by Congestion Monitor panel
+ */
+export interface CongestionZone {
+  id: string;
+  name: string;
+  loadPct: number;        // 0-100 percent of thermal limit
+  spread: number;         // LMP spread in $/MWh
+  trend: 'up' | 'down' | 'stable';
+  timestamp: string;      // ISO timestamp
+}

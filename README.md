@@ -1,9 +1,10 @@
 # GridGuard AI
 
-![Version](https://img.shields.io/badge/version-3.0.0-blue)
+![Version](https://img.shields.io/badge/version-3.1.0-blue)
 ![License](https://img.shields.io/badge/license-MIT-green)
 ![Status](https://img.shields.io/badge/status-Enterprise%20Prototype-orange)
 ![Compliance](https://img.shields.io/badge/NIST%20AI%20RMF-1.0%20Aligned-brightgreen)
+![Theme](https://img.shields.io/badge/Theme-Light%20%2F%20Dark-blueviolet)
 
 ![React](https://img.shields.io/badge/React-18-61DAFB?logo=react)
 ![TypeScript](https://img.shields.io/badge/TypeScript-5.0-3178C6?logo=typescript)
@@ -57,17 +58,20 @@ GridGuard AI is an **enterprise-grade command center** for electric grid operato
 | Safety Guards | 200+ | Physics-based guardrails, kill switches, bias testing |
 | Audit System | 150+ | Cryptographic SHA-256 event logging |
 
-### Current Status (v3.0.0)
+### Current Status (v3.1.0)
 
 | Capability | Status | Details |
 |------------|--------|---------|
 | **3D Digital Twin** | Operational | CesiumJS globe, satellite imagery, 3D assets, power flow visualization |
+| **Dynamic Data Loading** | Operational | Power assets, congestion zones fetched via API (no hardcoded data) |
 | **Real-Time Dashboard** | Operational | Grid metrics, thermal mapping, predictive alerts |
 | **Multi-Agent Orchestrator** | Operational | 5 AI agents (Weather, Load, Grid, Optimizer, Commander) with real Gemini Pro calls |
 | **Cyber Simulation Engine** | Operational | SCADA, DDoS, Ransomware scenarios with decision trees and scoring |
+| **Live Threat Monitoring** | Operational | Real-time threat detection via Agent Orchestrator log subscription |
 | **AI Governance Framework** | Operational | NIST AI RMF compliance, bias testing, drift detection, audit trail |
 | **Research & Knowledge** | Operational | NERC/ERCOT/NIST standards library, vector store, RAG integration |
 | **AI Chat Assistant** | Operational | Gemini Pro with function calling, multimodal support |
+| **Light/Dark Theme** | Operational | OS preference detection, persistent toggle, complete CSS variable system |
 
 ### Demo Mode vs Production Mode
 
@@ -164,8 +168,10 @@ With enterprise data integration, GridGuard AI enables:
 
 ![Cyber Sim](./docs/screenshots/cyber-sim.png)
 
-**Full Simulation Implementation (469 lines):**
+**Full Simulation Implementation (530+ lines):**
 - Multi-phase attack scenarios (SCADA, DDoS, Ransomware, Insider Threat, Supply Chain)
+- **NEW: Live Threat Mode** — Real-time monitoring of Agent Orchestrator for anomalies
+- Mode toggle between LIVE monitoring and TRAINING simulation
 - Decision trees with time-limited response windows
 - Scoring system with consequence modeling
 - Visual effects system for asset status changes
@@ -284,10 +290,38 @@ gridguard-ai/
 
 ## Security
 
-- All API credentials loaded via environment variables
-- No hardcoded secrets in source code
-- `.env.local` excluded from version control
-- See [SECURITY.md](SECURITY.md) for vulnerability reporting
+### Current Posture (DEF-CON 3/5)
+
+This prototype is designed for **demonstrations and investor evaluations**. It implements sophisticated AI governance patterns but operates as a client-side application without backend authentication.
+
+| Security Vector | Status | Production Requirement |
+|-----------------|--------|------------------------|
+| API Security | ⚠️ Uses CORS proxy | API Gateway + WAF |
+| Authentication | ❌ None | OAuth 2.0 + MFA |
+| Authorization | ⚠️ Frontend-only | Server-side RBAC |
+| Audit Storage | ✅ IndexedDB | Immutable server DB |
+| Data Encryption | ⚠️ TLS only | + At-rest encryption |
+
+### What's Implemented
+
+- ✅ No hardcoded secrets in source code
+- ✅ Environment variable configuration
+- ✅ `.env.local` excluded from version control
+- ✅ SHA-256 cryptographic audit trail
+- ✅ Physics-based safety guardrails
+- ✅ Kill switches and safe mode controls
+
+### Production Hardening Roadmap
+
+For deployment in operational environments:
+
+1. **Phase 1:** Deploy backend API (Node.js/FastAPI)
+2. **Phase 2:** Implement OAuth 2.0 + SSO
+3. **Phase 3:** Add server-side RBAC enforcement
+4. **Phase 4:** Replace CORS proxy with API gateway
+5. **Phase 5:** FedRAMP/NERC CIP certification
+
+See [SECURITY.md](SECURITY.md) for vulnerability reporting
 
 ---
 
