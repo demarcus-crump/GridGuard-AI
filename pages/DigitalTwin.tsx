@@ -14,6 +14,7 @@ const DESTINATIONS: Record<string, { coords: number[], heading: number, pitch: n
   'Austin': { coords: [-97.74, 30.27, 80000.0], heading: 0, pitch: -30 },
   'Nuclear': { coords: [-96.5, 28.7, 50000.0], heading: 45, pitch: -20 },
   'Solar': { coords: [-104.0, 31.0, 50000.0], heading: 30, pitch: -25 },
+  'DataCenters': { coords: [-97.0, 32.55, 60000.0], heading: 0, pitch: -35 }, // Google/Meta hyperscale cluster
   'Overview': { coords: [-99.0, 30.5, 1200000.0], heading: 25, pitch: -35 }
 };
 
@@ -878,6 +879,9 @@ export const DigitalTwin: React.FC = () => {
           </Button>
           <Button variant="secondary" size="sm" onClick={() => flyTo("DFW")} className="text-[9px] px-2">
             <span className="w-1.5 h-1.5 rounded-full bg-orange-400 mr-1"></span> DFW
+          </Button>
+          <Button variant="secondary" size="sm" onClick={() => { setIsCommercialVisible(true); flyTo("DataCenters"); }} className="text-[9px] px-2 border-l-2 border-l-cyan-400">
+            <span className="w-1.5 h-1.5 rounded-full bg-cyan-400 mr-1"></span> AI_DATACENTERS
           </Button>
           <Button variant="secondary" size="sm" onClick={() => flyTo("Nuclear")} className="text-[9px] px-2">
             <span className="w-1.5 h-1.5 rounded-full bg-pink-400 mr-1"></span> STP_NUCLEAR
