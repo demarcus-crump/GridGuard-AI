@@ -122,24 +122,35 @@ export const DigitalTwin: React.FC = () => {
           Cesium.Ion.defaultAccessToken = token;
         }
 
-        // 4. Create Viewer - Try Cesium Ion first, fallback to Esri if it fails
+        // 4. Create Viewer - Use Ion if token exists, otherwise go straight to Esri
         let baseImagery;
-        try {
-          baseImagery = await Cesium.createWorldImageryAsync({
-            style: Cesium.IonWorldImageryStyle.AERIAL
-          });
-        } catch (imageryError) {
-          console.warn('[CESIUM] Ion imagery failed, falling back to Esri:', imageryError);
-          // FAILSAFE: Use Esri World Imagery (public, no token needed)
+        let terrainProvider;
+
+        if (token) {
+          // With token: Try Cesium Ion (best quality)
+          try {
+            baseImagery = await Cesium.createWorldImageryAsync({
+              style: Cesium.IonWorldImageryStyle.AERIAL
+            });
+            terrainProvider = await Cesium.CesiumTerrainProvider.fromIonAssetId(1);
+          } catch (imageryError) {
+            console.warn('[CESIUM] Ion imagery failed, falling back to Esri:', imageryError);
+            baseImagery = new Cesium.ArcGisMapServerImageryProvider({
+              url: 'https://services.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer'
+            });
+            terrainProvider = new Cesium.EllipsoidTerrainProvider();
+          }
+        } else {
+          // No token: Go straight to Esri (free, no auth needed)
+          console.log('[CESIUM] No Ion token, using Esri World Imagery (free tier)');
           baseImagery = new Cesium.ArcGisMapServerImageryProvider({
             url: 'https://services.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer'
           });
+          terrainProvider = new Cesium.EllipsoidTerrainProvider();
         }
 
         const viewer = new Cesium.Viewer('cesium-viewport', {
-          terrainProvider: token
-            ? await Cesium.CesiumTerrainProvider.fromIonAssetId(1)
-            : new Cesium.EllipsoidTerrainProvider(),
+          terrainProvider,
           baseLayerPicker: false,
           geocoder: false,
           homeButton: false,
