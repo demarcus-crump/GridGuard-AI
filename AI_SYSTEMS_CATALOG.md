@@ -1,7 +1,7 @@
 # AI Systems Catalog - GridGuard AI
 
 **NIST AI RMF 1.0 Compliance Document**  
-**Last Updated:** 2025-12-24
+**Last Updated:** 2025-12-27
 
 ---
 
@@ -49,6 +49,9 @@
 | DATA-003 | `fineTuningService` | Training data collection | N/A | Low |
 | DATA-004 | `getGridNodes()` | Dynamic power asset loading | API | Low |
 | DATA-005 | `getCongestionData()` | Transmission congestion zones | API | Low |
+| DATA-006 | `dataStorageService` | IndexedDB time-series storage | Deterministic | Low |
+| DATA-007 | `dataIngestionService` | Historical backfill + live polling | API | Low |
+| DATA-008 | `forecastService` | ML load forecasting | Hourly Average | Medium |
 
 ### 5. Live Monitoring (v3.1.0)
 
@@ -106,6 +109,7 @@ graph TD
 
 | Version | Date | Changes |
 |---------|------|---------|
-| 3.0 | 2025-12-24 | Added DATA-004, DATA-005, LIVE-001, LIVE-002 (v3.1.0 components) |
+| 3.2 | 2025-12-27 | Added ML Pipeline: DATA-006, DATA-007, DATA-008 (storage, ingestion, forecasting) |
+| 3.1 | 2025-12-24 | Added DATA-004, DATA-005, LIVE-001, LIVE-002 (v3.1.0 components) |
 | 2.0 | 2025-12-17 | Added bias testing, model monitoring |
 | 1.0 | 2025-12-01 | Initial catalog |

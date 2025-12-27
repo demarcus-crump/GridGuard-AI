@@ -4,6 +4,32 @@ All notable changes to GridGuard AI are documented here.
 
 ---
 
+## [3.2.0] - 2025-12-27
+
+### Added
+
+#### ML Data Pipeline
+- **dataStorageService** — IndexedDB time-series storage with range queries and batch insert
+- **dataIngestionService** — Historical backfill + continuous live polling (configurable interval)
+- **forecastService** — Load forecasting with hourly average baseline model
+  - Model metrics: MAE, RMSE, MAPE, R²
+  - 24-hour prediction capability
+  - Upgradeable to TensorFlow.js
+
+#### 3D Map Enhancements
+- **Real-world coordinates** — All map assets now use verified locations:
+  - Fort Hood/Cavazos (actual military boundary)
+  - STP Nuclear & Comanche Peak (NRC database coordinates)
+  - Meta Fort Worth & Google Midlothian data centers (real locations)
+  - Roscoe & Great Prairie wind farms (actual coordinates)
+- **AI_DATACENTERS button** — Quick navigation to hyperscale data center cluster
+
+### Changed
+- Updated `AI_SYSTEMS_CATALOG.md` with DATA-006, DATA-007, DATA-008 components
+- Default theme now forces dark mode (removed OS preference detection)
+
+---
+
 ## [3.1.0] - 2025-12-24
 
 ### Added
