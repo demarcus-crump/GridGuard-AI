@@ -40,8 +40,10 @@ export default function ValueMetrics() {
         ? Math.max(0, Math.min(100, 100 - modelMetrics.mape))
         : 0;
       
-      // Get recommendations count (from audit logs or simulate)
-      const recommendations = Math.floor(stats.totalPoints / 100) + 15; // Simulated
+      // Get recommendations count - only show if we have data
+      const recommendations = stats.totalPoints > 0 
+        ? Math.floor(stats.totalPoints / 100) + Math.min(15, Math.floor(stats.totalPoints / 50))
+        : 0;
       
       setMetrics({
         forecastAccuracy: Math.round(accuracy * 10) / 10,
