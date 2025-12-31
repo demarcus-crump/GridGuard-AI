@@ -14,7 +14,6 @@ import { dataService } from '../services/dataServiceFactory';
 import { Tooltip } from '../components/Common/Tooltip';
 import { predictiveService, CorridorRisk, PredictiveAlert } from '../services/predictiveService';
 import { getDispatchRecommendations, executeDispatch, SCEDAnalysisResult, DispatchDecision } from '../services/scedService';
-import ValueMetrics from '../components/Dashboard/ValueMetrics';
 
 // --- SUB-COMPONENTS FOR CONTROL ROOM ---
 
@@ -404,9 +403,6 @@ export const Dashboard: React.FC = () => {
 
                 {/* CONTROL STACK */}
                 <div className="lg:col-span-1 flex flex-col gap-4 h-[550px]">
-
-                    {/* VALUE METRICS */}
-                    <ValueMetrics />
 
                     {/* SCED OPTIMIZER */}
                     <Card

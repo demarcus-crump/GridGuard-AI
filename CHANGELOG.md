@@ -17,13 +17,6 @@ All notable changes to GridGuard AI are documented here.
   - 24-hour prediction capability
   - Upgradeable to TensorFlow.js
 
-#### Value Metrics Dashboard
-
-- **ValueMetrics component** — Quantifies platform output on Dashboard
-  - Displays forecast accuracy (95.2%), data points processed (12.4K), AI recommendations (38)
-  - Auto-generated "Data → Value" statement
-  - Pulls real metrics from ML pipeline services (no backend required)
-
 #### 3D Map Enhancements
 
 - **Real-world coordinates** — All map assets now use verified locations:
