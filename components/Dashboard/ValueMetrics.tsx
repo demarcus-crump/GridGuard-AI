@@ -99,119 +99,66 @@ export default function ValueMetrics() {
   }
 
   return (
-    <div className="bg-[var(--bg-secondary)] rounded-lg border border-[var(--border-default)] p-6">
+    <div className="bg-[var(--bg-secondary)] rounded-lg border border-[var(--border-default)] p-3">
       {/* Header */}
-      <div className="flex items-center justify-between mb-4">
+      <div className="flex items-center justify-between mb-3">
         <div className="flex items-center gap-2">
-          <svg className="w-5 h-5 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <svg className="w-4 h-4 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
           </svg>
-          <h3 className="font-bold text-sm uppercase tracking-tight text-[var(--text-primary)]">
+          <h3 className="font-bold text-xs uppercase tracking-tight text-[var(--text-primary)]">
             Value Metrics
           </h3>
         </div>
-        <div className="flex items-center gap-1 text-[10px] text-[var(--text-muted)]">
-          <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <div className="flex items-center gap-1 text-[9px] text-[var(--text-muted)]">
+          <svg className="w-2.5 h-2.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
           </svg>
           <span>LIVE</span>
         </div>
       </div>
 
-      {/* Metrics Grid */}
-      <div className="space-y-3">
+      {/* Compact Metrics Grid */}
+      <div className="grid grid-cols-3 gap-2 mb-2">
         {/* Forecast Accuracy */}
-        <div className="bg-[var(--bg-tertiary)] rounded-lg p-4 border border-[var(--border-default)]">
-          <div className="flex items-center justify-between mb-1">
-            <span className="text-[11px] font-semibold text-[var(--text-secondary)] uppercase tracking-wide">
-              Forecast Accuracy
-            </span>
-            {metrics.modelR2 > 0 && (
-              <span className="text-[9px] text-[var(--text-muted)]">
-                R² = {metrics.modelR2.toFixed(3)}
-              </span>
-            )}
+        <div className="text-center">
+          <div className="text-[9px] font-semibold text-[var(--text-muted)] uppercase mb-1">
+            Accuracy
           </div>
-          <div className="flex items-baseline gap-2">
-            <span className={`text-3xl font-bold ${getAccuracyColor(metrics.forecastAccuracy)}`}>
-              {metrics.forecastAccuracy > 0 ? `${metrics.forecastAccuracy}%` : '—'}
-            </span>
-            {metrics.forecastAccuracy > 0 && (
-              <span className="text-xs text-[var(--text-muted)]">
-                {metrics.forecastAccuracy >= 95 ? 'Excellent' : 
-                 metrics.forecastAccuracy >= 85 ? 'Good' : 'Fair'}
-              </span>
-            )}
+          <div className={`text-xl font-bold ${getAccuracyColor(metrics.forecastAccuracy)}`}>
+            {metrics.forecastAccuracy > 0 ? `${metrics.forecastAccuracy}%` : '—'}
           </div>
-          {metrics.forecastAccuracy === 0 && (
-            <p className="text-[10px] text-[var(--text-muted)] mt-1">
-              Train model to enable forecasting
-            </p>
-          )}
         </div>
 
-        {/* Data Points Processed */}
-        <div className="bg-[var(--bg-tertiary)] rounded-lg p-4 border border-[var(--border-default)]">
-          <div className="flex items-center justify-between mb-1">
-            <span className="text-[11px] font-semibold text-[var(--text-secondary)] uppercase tracking-wide">
-              Data Points Analyzed
-            </span>
+        {/* Data Points */}
+        <div className="text-center border-l border-r border-[var(--border-muted)]">
+          <div className="text-[9px] font-semibold text-[var(--text-muted)] uppercase mb-1">
+            Data Points
           </div>
-          <div className="flex items-baseline gap-2">
-            <span className="text-3xl font-bold text-blue-400">
-              {formatNumber(metrics.dataPointsProcessed)}
-            </span>
-            <span className="text-xs text-[var(--text-muted)]">
-              grid telemetry
-            </span>
+          <div className="text-xl font-bold text-blue-400">
+            {formatNumber(metrics.dataPointsProcessed)}
           </div>
-          {metrics.dataPointsProcessed === 0 && (
-            <p className="text-[10px] text-[var(--text-muted)] mt-1">
-              Start data ingestion to collect readings
-            </p>
-          )}
         </div>
 
         {/* AI Recommendations */}
-        <div className="bg-[var(--bg-tertiary)] rounded-lg p-4 border border-[var(--border-default)]">
-          <div className="flex items-center justify-between mb-1">
-            <span className="text-[11px] font-semibold text-[var(--text-secondary)] uppercase tracking-wide">
-              AI Recommendations
-            </span>
+        <div className="text-center">
+          <div className="text-[9px] font-semibold text-[var(--text-muted)] uppercase mb-1">
+            AI Actions
           </div>
-          <div className="flex items-baseline gap-2">
-            <span className="text-3xl font-bold text-purple-400">
-              {metrics.recommendationsMade}
-            </span>
-            <span className="text-xs text-[var(--text-muted)]">
-              dispatch actions
-            </span>
+          <div className="text-xl font-bold text-purple-400">
+            {metrics.recommendationsMade}
           </div>
         </div>
       </div>
 
-      {/* Data-to-Value Statement */}
+      {/* Compact Data-to-Value Statement */}
       {(metrics.forecastAccuracy > 0 || metrics.dataPointsProcessed > 0) && (
-        <div className="mt-4 pt-4 border-t border-[var(--border-default)]">
-          <p className="text-[10px] text-[var(--text-muted)] leading-relaxed">
+        <div className="pt-2 border-t border-[var(--border-muted)]">
+          <p className="text-[9px] text-[var(--text-muted)] leading-tight">
             <span className="text-cyan-400 font-semibold">Data → Value:</span>{' '}
-            Platform has processed{' '}
-            <span className="text-[var(--text-primary)] font-semibold">
-              {formatNumber(metrics.dataPointsProcessed)} grid readings
-            </span>
-            {metrics.forecastAccuracy > 0 && (
-              <>
-                , generating forecasts with{' '}
-                <span className="text-[var(--text-primary)] font-semibold">
-                  {metrics.forecastAccuracy}% accuracy
-                </span>
-              </>
-            )}
-            , and recommending{' '}
-            <span className="text-[var(--text-primary)] font-semibold">
-              {metrics.recommendationsMade} dispatch optimizations
-            </span>
-            .
+            {formatNumber(metrics.dataPointsProcessed)} readings
+            {metrics.forecastAccuracy > 0 && ` • ${metrics.forecastAccuracy}% accuracy`}
+            {' • '}{metrics.recommendationsMade} optimizations
           </p>
         </div>
       )}
